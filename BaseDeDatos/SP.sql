@@ -406,3 +406,46 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+
+
+
+
+-- SP para eliminar la foto de perfil con validación de PING si es paciente (1)
+CREATE PROCEDURE SP_EliminarFotoPerfil
+    @ID_USUARIO INT,
+    @CODIGO_PING VARCHAR(6) = NULL,  -- Opcional, solo requerido si hay un ping activo
+	@ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+
+	DECLARE @PING_ACTIVO BIT = 0;
+
+
+   
+	IF EXISTS (SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [ESTADO] = 1)
+	BEGIN
+	 IF NOT EXISTS(SELECT 1 FROM [dbo].[PING]  WHERE ID_USUARIO = @ID_USUARIO  AND CODIGO = @CODIGO_PING AND ESTADO = 1)
+        BEGIN
+            SET @ERROR_ID = 4;
+            SET @ERROR_DESCRIPTION = 'PIN incorrecto.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+	END
+
+    -- Si el usuario no es paciente o no tiene PING activo, o el PING es válido, eliminar la foto
+    IF EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE @ID_USUARIO =[ID_USUARIO])
+    BEGIN
+        UPDATE USUARIO
+        SET FOTO_PERFIL = NULL
+        WHERE ID_USUARIO = @ID_USUARIO;
+    END
+	ELSE 
+	BEGIN
+	 SET @ERROR_ID = 4;
+            SET @ERROR_DESCRIPTION = 'USUARIO NO EXISTE.';
+            ROLLBACK TRANSACTION;
+	END
+END;
+GO
