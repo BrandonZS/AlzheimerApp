@@ -260,3 +260,83 @@ BEGIN
     END CATCH
 END;
 
+
+
+
+--Sp cambio de contra
+CREATE OR ALTER PROCEDURE SP_CAMBIAR_CONTRASENA
+    @ID_USUARIO INT,
+    @CONTRASENA_ACTUAL VARCHAR(255),
+    @NUEVA_CONTRASENA VARCHAR(255),
+    @PIN VARCHAR(6) = NULL,
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        DECLARE @PIN_CORRECTO INT;
+		DECLARE @ID_TIPO_USUARIO INT;
+
+		        -- Si el usuario es un paciente (tipo 1), validar el PIN si tiene uno activo
+		IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE @ID_USUARIO = [ID_USUARIO])
+		BEGIN 
+		 SET @ID_RETURN = -1;
+                SET @ERROR_ID = 4;
+                SET @ERROR_DESCRIPTION = 'USUARIO NO EXISTE';
+                ROLLBACK TRANSACTION;
+                RETURN; 
+		END
+		ELSE
+		BEGIN
+			 IF EXISTS(SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [ESTADO] = 1) 
+			 BEGIN
+                SELECT @PIN_CORRECTO = COUNT(*) FROM PING WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN AND ESTADO = 1;
+                IF @PIN_CORRECTO = 0
+                BEGIN
+                    SET @ERROR_ID = 4;
+                    SET @ERROR_DESCRIPTION = 'PIN incorrecto.';
+                    ROLLBACK TRANSACTION;
+                    RETURN;
+                END
+			 END
+		END
+
+        -- Validar que la contraseña actual sea correcta
+		IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CONTRASENA] = @CONTRASENA_ACTUAL AND [ID_USUARIO]= @ID_USUARIO)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'La contraseña actual es incorrecta';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que la nueva contraseña no sea igual a la actual
+        IF EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CONTRASENA] = @NUEVA_CONTRASENA AND [ID_USUARIO]= @ID_USUARIO)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 3;
+            SET @ERROR_DESCRIPTION = 'La nueva contraseña no puede ser igual a la actual';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+
+
+        -- Actualizar la contraseña
+        UPDATE USUARIO
+        SET CONTRASENA = @NUEVA_CONTRASENA
+        WHERE ID_USUARIO = @ID_USUARIO;
+
+        SET @ID_RETURN = 1;
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
