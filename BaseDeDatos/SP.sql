@@ -143,3 +143,65 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+
+
+
+--Editar datos del usuario 
+CREATE OR ALTER PROCEDURE SP_EDITAR_USUARIO
+    @ID_USUARIO INT,
+    @NOMBRE VARCHAR(100),
+    @FECHA_NACIMIENTO DATE,
+    @DIRECCION VARCHAR(255),
+    @PIN VARCHAR(6) = NULL,
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    DECLARE @ID_TIPO_USUARIO INT;
+    DECLARE @PIN_CORRECTO INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Verificar si el usuario existe y obtener su tipo
+        SELECT @ID_TIPO_USUARIO = ID_TIPO_USUARIO FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO;
+
+        IF @ID_TIPO_USUARIO IS NULL
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El usuario no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Si es paciente (tipo 1), verificar si tiene un PIN activo
+        IF EXISTS(SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [ESTADO] = 1) AND @ID_TIPO_USUARIO = 1 
+        BEGIN
+                SELECT @PIN_CORRECTO = COUNT(*) FROM PING WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN AND ESTADO = 1;
+                IF @PIN_CORRECTO = 0
+                BEGIN
+                    SET @ERROR_ID = 4;
+                    SET @ERROR_DESCRIPTION = 'PIN incorrecto.';
+                    ROLLBACK TRANSACTION;
+                    RETURN;
+                END
+        END
+
+        -- Actualizar los datos del usuario
+        UPDATE USUARIO
+        SET NOMBRE = @NOMBRE,
+            FECHA_NACIMIENTO = @FECHA_NACIMIENTO,
+            DIRECCION = @DIRECCION
+        WHERE ID_USUARIO = @ID_USUARIO;
+
+        COMMIT TRANSACTION;
+        SET @ERROR_ID = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
