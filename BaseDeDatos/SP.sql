@@ -205,3 +205,58 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+
+
+
+
+--Modificar ping
+CREATE OR ALTER PROCEDURE SP_MODIFICAR_PING
+    @ID_USUARIO INT,
+    @PIN_ACTUAL VARCHAR(6),
+    @NUEVO_CODIGO VARCHAR(6),
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        IF NOT EXISTS(SELECT 1 FROM [dbo].[PING]  WHERE ID_USUARIO = @ID_USUARIO  AND CODIGO = @PIN_ACTUAL AND ESTADO = 1)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El PIN actual es incorrecto o no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que el nuevo código tenga 6 dígitos numéricos
+        IF @NUEVO_CODIGO IS NULL OR LEN(@NUEVO_CODIGO) <> 6 OR @NUEVO_CODIGO LIKE '%[^0-9]%'
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 3;
+            SET @ERROR_DESCRIPTION = 'El nuevo PIN debe contener exactamente 6 dígitos numéricos';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Actualizar el PIN activo
+        UPDATE PING 
+        SET ESTADO = 0
+        WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN_ACTUAL AND ESTADO = 1;
+
+		INSERT INTO PING(CODIGO,FECHA,ESTADO,ID_USUARIO)
+			VALUES(@NUEVO_CODIGO,GETDATE(),1,@ID_USUARIO)
+
+		SET @ID_RETURN = SCOPE_IDENTITY();
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
