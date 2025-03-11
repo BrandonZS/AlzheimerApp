@@ -59,3 +59,39 @@ BEGIN
 		SET @ERROR_DESCRIPTION =ERROR_MESSAGE();
     END CATCH
 END;
+
+
+
+CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_FOTO_PERFIL
+    @ID_USUARIO INT,
+    @FOTO_PERFIL VARBINARY(MAX),
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Verificar si el usuario existe
+        IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [ID_USUARIO] = @ID_USUARIO)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'Usuario no encontrado';
+        END
+        ELSE
+        BEGIN
+            -- Actualizar la foto de perfil
+            UPDATE USUARIO
+            SET FOTO_PERFIL = @FOTO_PERFIL
+            WHERE ID_USUARIO = @ID_USUARIO;
+        END
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
