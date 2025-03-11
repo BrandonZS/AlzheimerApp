@@ -340,3 +340,69 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+
+
+
+
+--SP RELACION ENTRE CUIDADOR PACIENTE 
+
+CREATE OR ALTER PROCEDURE SP_RELACIONAR_PACIENTE_CUIDADOR
+    @ID_USUARIO_CUIDADOR INT,
+    @CODIGO_PACIENTE VARCHAR(6),
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DECLARE @ID_USUARIO_PACIENTE INT;
+
+        -- Buscar el ID del paciente usando el código alfanumérico
+        SELECT @ID_USUARIO_PACIENTE = ID_USUARIO FROM USUARIO WHERE CODIGO = @CODIGO_PACIENTE AND ID_TIPO_USUARIO = 1;
+
+        -- Validar que el paciente exista
+        IF @ID_USUARIO_PACIENTE IS NULL
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El código del paciente es incorrecto o no existe.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que el cuidador exista
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO_CUIDADOR AND ID_TIPO_USUARIO = 2)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El ID del cuidador no es válido.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Verificar si la relación ya existe
+        IF EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_PACIENTE = @ID_USUARIO_PACIENTE AND ID_USUARIO_CUIDADOR = @ID_USUARIO_CUIDADOR)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 3;
+            SET @ERROR_DESCRIPTION = 'La relación entre paciente y cuidador ya existe.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Insertar la relación en la tabla CUIDADOR_PACIENTE
+        INSERT INTO CUIDADOR_PACIENTE (ID_USUARIO_CUIDADOR, ID_USUARIO_PACIENTE, FEC_INICIO)
+        VALUES (@ID_USUARIO_CUIDADOR, @ID_USUARIO_PACIENTE, GETDATE());
+
+        SET @ID_RETURN = SCOPE_IDENTITY();
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
