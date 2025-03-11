@@ -95,3 +95,51 @@ BEGIN
     END CATCH
 END;
 
+
+
+
+CREATE OR ALTER PROCEDURE SP_INSERTAR_PING
+    @ID_USUARIO INT,
+    @CODIGO VARCHAR(6),
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        -- Verificar que el usuario exista y sea de tipo paciente (ID_TIPO_USUARIO = 1)
+        IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [ID_USUARIO] = @ID_USUARIO AND ID_TIPO_USUARIO = 1)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 3;
+            SET @ERROR_DESCRIPTION = 'El usuario no existe o no es un paciente';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        
+        -- Verificar que el código no sea nulo
+        IF @CODIGO IS NULL OR LEN(@CODIGO) <> 6 OR @CODIGO LIKE '%[^0-9]%'
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 4;
+            SET @ERROR_DESCRIPTION = 'El PIN debe contener exactamente 4 dígitos numéricos';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        
+        -- Insertar el nuevo ping
+        INSERT INTO PING (CODIGO, FECHA, ESTADO, ID_USUARIO)
+        VALUES (@CODIGO, GETDATE(), 1, @ID_USUARIO);
+        
+        SET @ID_RETURN = SCOPE_IDENTITY();
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
