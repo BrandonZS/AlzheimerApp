@@ -9,7 +9,6 @@ CREATE OR ALTER PROCEDURE SP_REGISTRAR_USUARIO
 	@ID_RETURN INT OUTPUT,
 	@ERROR_ID INT OUTPUT,
 	@ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
-
 AS
 BEGIN
     DECLARE @CODIGO VARCHAR(6) = NULL;
@@ -63,8 +62,6 @@ BEGIN
     END CATCH
 END;
 
-
-
 CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_FOTO_PERFIL
     @ID_USUARIO INT,
     @FOTO_PERFIL VARBINARY(MAX),
@@ -98,9 +95,6 @@ BEGIN
     END CATCH
 END;
 
-
-
-
 CREATE OR ALTER PROCEDURE SP_INSERTAR_PING
     @ID_USUARIO INT,
     @CODIGO VARCHAR(6),
@@ -121,13 +115,33 @@ BEGIN
             ROLLBACK TRANSACTION;
             RETURN;
         END
+                -- Verificar si el usuario ya tiene un PING activo
+        IF EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND ESTADO = 1)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 5;
+            SET @ERROR_DESCRIPTION = 'El usuario ya tiene un PIN activo';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
         
+                -- Verificar si el usuario ya tiene un PING activo
+        IF EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND ESTADO = 1)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 5;
+            SET @ERROR_DESCRIPTION = 'El usuario ya tiene un PIN activo';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        
+
         -- Verificar que el código no sea nulo
         IF @CODIGO IS NULL OR LEN(@CODIGO) <> 6 OR @CODIGO LIKE '%[^0-9]%'
         BEGIN
             SET @ID_RETURN = -1;
             SET @ERROR_ID = 4;
-            SET @ERROR_DESCRIPTION = 'El PIN debe contener exactamente 4 dígitos numéricos';
+            SET @ERROR_DESCRIPTION = 'El PIN debe contener exactamente 6 dígitos numéricos';
             ROLLBACK TRANSACTION;
             RETURN;
         END
