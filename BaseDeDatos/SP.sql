@@ -62,6 +62,7 @@ BEGIN
 		SET @ERROR_DESCRIPTION =ERROR_MESSAGE();
     END CATCH
 END;
+GO
 
 --Actualizar foto de perfil
 CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_FOTO_PERFIL
@@ -96,6 +97,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+GO
 
 --Insertar un ping 
 CREATE OR ALTER PROCEDURE SP_INSERTAR_PING
@@ -163,6 +165,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+GO
 
 --Editar datos del usuario 
 CREATE OR ALTER PROCEDURE SP_EDITAR_USUARIO
@@ -223,6 +226,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+GO
 
 --Modificar ping
 CREATE OR ALTER PROCEDURE SP_MODIFICAR_PING
@@ -274,6 +278,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+GO
 
 --Sp cambio de contra
 CREATE OR ALTER PROCEDURE SP_CAMBIAR_CONTRASENA
@@ -346,6 +351,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+GO
 
 --SP RELACION ENTRE CUIDADOR PACIENTE 
 CREATE OR ALTER PROCEDURE SP_RELACIONAR_PACIENTE_CUIDADOR
@@ -408,6 +414,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+GO
 
 -- SP para eliminar la foto de perfil con validación de PING si es paciente (1)
 CREATE OR ALTER PROCEDURE SP_EliminarFotoPerfil
@@ -447,6 +454,58 @@ BEGIN
         UPDATE USUARIO
         SET FOTO_PERFIL = NULL
         WHERE ID_USUARIO = @ID_USUARIO;
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+
+--SP ELIMINAR(PONER ESTADO EN 0) PING
+CREATE OR ALTER PROCEDURE SP_EliminarPing
+    @ID_USUARIO INT,
+    @CODIGO_PING VARCHAR(6),
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Verificar si el usuario existe
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El usuario no existe.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Verificar si el usuario tiene un PING activo
+        IF NOT EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND ESTADO = 1)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'No hay un PING activo para este usuario.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que el PIN proporcionado sea correcto
+        IF NOT EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @CODIGO_PING AND ESTADO = 1)
+        BEGIN
+            SET @ERROR_ID = 3;
+            SET @ERROR_DESCRIPTION = 'El PIN proporcionado es incorrecto.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Cambiar el estado del PING a 0 (desactivado)
+        UPDATE PING
+        SET ESTADO = 0
+        WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @CODIGO_PING AND ESTADO = 1;
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
