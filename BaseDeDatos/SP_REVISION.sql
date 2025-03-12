@@ -14,7 +14,7 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Validar que el cuidador existe, que el paciente está relacionado y que la prioridad existe
+        -- Validar que el cuidador existe, que el paciente está relacionado y que la prioridad es válida
         IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_CUIDADOR AND ID_TIPO_USUARIO = 2)
         BEGIN
             SET @ID_RETURN = -1;
@@ -32,12 +32,13 @@ BEGIN
             ROLLBACK TRANSACTION;
             RETURN;
         END
-		--Revisar mejor (no se definido como trabajar la opcio prioridad)
-        IF NOT EXISTS (SELECT 1 FROM PRIORIDAD WHERE ID_PRIORIDAD = @ID_PRIORIDAD)
+
+        -- Validar que la prioridad sea válida (1: Baja, 2: Media, 3: Alta)
+        IF @ID_PRIORIDAD NOT IN (1, 2, 3)
         BEGIN
             SET @ID_RETURN = -1;
             SET @ERROR_ID = 3;
-            SET @ERROR_DESCRIPTION = 'La prioridad seleccionada no existe';
+            SET @ERROR_DESCRIPTION = 'La prioridad seleccionada no es válida';
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -61,4 +62,3 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
-ir aquí nuevos sp pendientes de revisar
