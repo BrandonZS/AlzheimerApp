@@ -1,3 +1,4 @@
+--Registrar un usuario nuevo
 CREATE OR ALTER PROCEDURE SP_REGISTRAR_USUARIO
     @NOMBRE VARCHAR(100),
     @CORREO_ELECTRONICO NVARCHAR(255),
@@ -62,6 +63,7 @@ BEGIN
     END CATCH
 END;
 
+--Actualizar foto de perfil
 CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_FOTO_PERFIL
     @ID_USUARIO INT,
     @FOTO_PERFIL VARBINARY(MAX),
@@ -95,6 +97,7 @@ BEGIN
     END CATCH
 END;
 
+--Insertar un ping 
 CREATE OR ALTER PROCEDURE SP_INSERTAR_PING
     @ID_USUARIO INT,
     @CODIGO VARCHAR(6),
@@ -161,8 +164,6 @@ BEGIN
     END CATCH
 END;
 
-
-
 --Editar datos del usuario 
 CREATE OR ALTER PROCEDURE SP_EDITAR_USUARIO
     @ID_USUARIO INT,
@@ -223,9 +224,6 @@ BEGIN
     END CATCH
 END;
 
-
-
-
 --Modificar ping
 CREATE OR ALTER PROCEDURE SP_MODIFICAR_PING
     @ID_USUARIO INT,
@@ -277,16 +275,12 @@ BEGIN
     END CATCH
 END;
 
-
-
-
 --Sp cambio de contra
 CREATE OR ALTER PROCEDURE SP_CAMBIAR_CONTRASENA
     @ID_USUARIO INT,
     @CONTRASENA_ACTUAL VARCHAR(255),
     @NUEVA_CONTRASENA VARCHAR(255),
     @PIN VARCHAR(6) = NULL,
-    @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
@@ -299,7 +293,6 @@ BEGIN
 		        -- Si el usuario es un paciente (tipo 1), validar el PIN si tiene uno activo
 		IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE @ID_USUARIO = [ID_USUARIO])
 		BEGIN 
-		 SET @ID_RETURN = -1;
                 SET @ERROR_ID = 4;
                 SET @ERROR_DESCRIPTION = 'USUARIO NO EXISTE';
                 ROLLBACK TRANSACTION;
@@ -323,7 +316,6 @@ BEGIN
         -- Validar que la contraseña actual sea correcta
 		IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CONTRASENA] = @CONTRASENA_ACTUAL AND [ID_USUARIO]= @ID_USUARIO)
         BEGIN
-            SET @ID_RETURN = -1;
             SET @ERROR_ID = 2;
             SET @ERROR_DESCRIPTION = 'La contraseña actual es incorrecta';
             ROLLBACK TRANSACTION;
@@ -333,7 +325,6 @@ BEGIN
         -- Validar que la nueva contraseña no sea igual a la actual
         IF EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CONTRASENA] = @NUEVA_CONTRASENA AND [ID_USUARIO]= @ID_USUARIO)
         BEGIN
-            SET @ID_RETURN = -1;
             SET @ERROR_ID = 3;
             SET @ERROR_DESCRIPTION = 'La nueva contraseña no puede ser igual a la actual';
             ROLLBACK TRANSACTION;
@@ -347,12 +338,10 @@ BEGIN
         SET CONTRASENA = @NUEVA_CONTRASENA
         WHERE ID_USUARIO = @ID_USUARIO;
 
-        SET @ID_RETURN = 1;
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
-        SET @ID_RETURN = -1;
         SET @ERROR_ID = ERROR_NUMBER();
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
