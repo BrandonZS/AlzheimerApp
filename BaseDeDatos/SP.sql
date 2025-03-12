@@ -391,7 +391,7 @@ BEGIN
         END
 
         -- Verificar si la relación ya existe
-        IF EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_PACIENTE = @ID_USUARIO_PACIENTE AND ID_USUARIO_CUIDADOR = @ID_USUARIO_CUIDADOR)
+        IF EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_PACIENTE = @ID_USUARIO_PACIENTE AND ID_USUARIO_CUIDADOR = @ID_USUARIO_CUIDADOR )
         BEGIN
             SET @ID_RETURN = -1;
             SET @ERROR_ID = 3;
@@ -506,6 +506,77 @@ BEGIN
         UPDATE PING
         SET ESTADO = 0
         WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @CODIGO_PING AND ESTADO = 1;
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+
+--SP Eliminar Relacion Cuidador-Paciente
+CREATE OR ALTER PROCEDURE SP_TerminarRelacionCuidadorPaciente
+    @ID_USUARIO_CUIDADOR INT,
+    @ID_USUARIO_PACIENTE INT,
+    @CODIGO_PING VARCHAR(6) = NULL, -- Opcional, solo requerido si el paciente termina la relación
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Verificar si el paciente existe y si es realmente un paciente
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO_PACIENTE AND ID_TIPO_USUARIO = 1)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El usuario paciente no existe o no es un paciente.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Verificar si el cuidador existe
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO_CUIDADOR)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El usuario cuidador no existe.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Verificar si la relación existe y no está terminada
+        IF NOT EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_CUIDADOR = @ID_USUARIO_CUIDADOR AND ID_USUARIO_PACIENTE = @ID_USUARIO_PACIENTE AND FEC_FIN IS NULL)
+        BEGIN
+            SET @ERROR_ID = 3;
+            SET @ERROR_DESCRIPTION = 'La relación entre el paciente y el cuidador no existe o ya fue terminada.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Si el paciente está terminando la relación, validar su PING
+        IF @CODIGO_PING != NULL AND EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO_PACIENTE AND ESTADO = 1)
+        BEGIN
+            -- Validar que el PIN proporcionado sea correcto
+            IF NOT EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO_PACIENTE AND CODIGO = @CODIGO_PING AND ESTADO = 1)
+            BEGIN
+                SET @ERROR_ID = 4;
+                SET @ERROR_DESCRIPTION = 'PIN incorrecto.';
+                ROLLBACK TRANSACTION;
+                RETURN;
+            END
+        END
+
+        -- Actualizar la relación estableciendo la fecha de finalización
+        UPDATE CUIDADOR_PACIENTE
+        SET FEC_FIN = GETDATE()
+        WHERE ID_USUARIO_CUIDADOR = @ID_USUARIO_CUIDADOR 
+        AND ID_USUARIO_PACIENTE = @ID_USUARIO_PACIENTE 
+        AND FEC_FIN IS NULL;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
