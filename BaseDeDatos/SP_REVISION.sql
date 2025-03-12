@@ -137,3 +137,40 @@ BEGIN
     END CATCH
 END;
 
+
+--SP optener eventos 
+CREATE OR ALTER PROCEDURE SP_OBTENER_EVENTOS_PACIENTE
+    @ID_PACIENTE INT,
+	 @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        -- Obtener todos los eventos asociados al paciente, sin importar el cuidador
+        SELECT 
+            E.ID_EVENTO, -- Identificador único del evento
+            E.TITULO, -- Título del evento
+            E.DESCRIPCION, -- Descripción opcional del evento
+            E.FECHA_HORA, -- Fecha y hora programada para el evento
+            P.ID_PRIORIDAD, -- Identificador de la prioridad del evento (1: Baja, 2: Media, 3: Alta)
+            P.DESCRIPCION AS PRIORIDAD, -- Nombre de la prioridad (Baja, Media, Alta)
+            U.ID_USUARIO AS ID_CUIDADOR, -- Identificador del cuidador que creó el evento
+            U.NOMBRE AS NOMBRE_CUIDADOR -- Nombre del cuidador que creó el evento
+        FROM EVENTO E
+        -- Relaciona el evento con la prioridad
+        INNER JOIN PRIORIDAD P ON E.ID_PRIORIDAD = P.ID_PRIORIDAD
+        -- Relaciona el evento con los pacientes asignados
+        INNER JOIN EVENTO_USUARIO EU ON E.ID_EVENTO = EU.ID_EVENTO
+        -- Relaciona el evento con el cuidador que lo creó
+        INNER JOIN USUARIO U ON E.ID_USUARIO = U.ID_USUARIO
+        -- Filtra los eventos asignados al paciente solicitado
+        WHERE EU.ID_USUARIO = @ID_PACIENTE;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
