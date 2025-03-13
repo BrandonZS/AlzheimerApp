@@ -76,6 +76,27 @@ BEGIN
         WHERE MU.ID_USUARIO = @ID_PACIENTE;
     END TRY
     BEGIN CATCH
-        PRINT ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+
+
+-- Procedimiento para actualizar el estado de los mensajes como 'vistos'
+CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_ESTADO_MENSAJES
+    @ID_PACIENTE INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Actualizar el estado del mensaje a leído y registrar la hora de recepción
+        UPDATE MENSAJE_USUARIO
+        SET ID_ESTADO = 2, HORA_RECIBIDO = GETDATE()
+        WHERE ID_USUARIO = @ID_PACIENTE AND ID_ESTADO = 1; -- Solo actualizar mensajes no leídos
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
     END CATCH
 END;
