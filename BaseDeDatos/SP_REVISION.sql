@@ -51,3 +51,31 @@ BEGIN
     END CATCH
 END;
 
+
+GO
+
+
+-- Procedimiento para obtener los mensajes de un paciente
+CREATE OR ALTER PROCEDURE SP_OBTENER_MENSAJES_PACIENTE
+    @ID_PACIENTE INT
+AS
+BEGIN
+    BEGIN TRY
+        -- Obtener todos los mensajes asignados al paciente
+        SELECT 
+            M.ID_MENSAJE,
+            M.CONTENIDO,
+            M.FECHA_HORA,
+            U.ID_USUARIO AS ID_CUIDADOR,
+            U.NOMBRE AS NOMBRE_CUIDADOR,
+            MU.ID_ESTADO,
+            MU.HORA_RECIBIDO
+        FROM MENSAJE M
+        INNER JOIN MENSAJE_USUARIO MU ON M.ID_MENSAJE = MU.ID_MENSAJE
+        INNER JOIN USUARIO U ON M.ID_USUARIO = U.ID_USUARIO
+        WHERE MU.ID_USUARIO = @ID_PACIENTE;
+    END TRY
+    BEGIN CATCH
+        PRINT ERROR_MESSAGE();
+    END CATCH
+END;
