@@ -691,3 +691,54 @@ BEGIN
     END CATCH
 END;
 GO
+
+--SP_MODIFICAR_EVENTO
+CREATE OR ALTER PROCEDURE SP_MODIFICAR_EVENTO
+    @ID_EVENTO INT,
+    @ID_CUIDADOR INT,
+    @TITULO VARCHAR(255),
+    @DESCRIPCION VARCHAR(255) = NULL,
+    @FECHA_HORA DATETIME,
+    @ID_PRIORIDAD INT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el evento existe y pertenece al cuidador
+        IF NOT EXISTS (SELECT 1 FROM EVENTO WHERE ID_EVENTO = @ID_EVENTO AND ID_USUARIO = @ID_CUIDADOR)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El evento no existe o no pertenece al cuidador';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que la prioridad sea válida
+        IF NOT EXISTS (SELECT 1 FROM PRIORIDAD WHERE ID_PRIORIDAD = @ID_PRIORIDAD)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'La prioridad seleccionada no es válida';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Actualizar el evento
+        UPDATE EVENTO
+        SET TITULO = @TITULO, 
+            DESCRIPCION = @DESCRIPCION, 
+            FECHA_HORA = @FECHA_HORA, 
+            ID_PRIORIDAD = @ID_PRIORIDAD
+        WHERE ID_EVENTO = @ID_EVENTO;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+GO
