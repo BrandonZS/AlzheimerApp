@@ -586,3 +586,305 @@ BEGIN
     END CATCH
 END;
 GO
+
+
+--PROPUESTA DE SPS PARA MANEJAR LOS EVENTOS
+
+-- Procedimiento para agregar un evento sin asignar pacientes
+CREATE OR ALTER PROCEDURE SP_AGREGAR_EVENTO
+    @ID_CUIDADOR INT,
+    @TITULO VARCHAR(255),
+    @DESCRIPCION VARCHAR(255) = NULL,
+    @FECHA_HORA DATETIME,
+    @ID_PRIORIDAD INT,
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el cuidador existe
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_CUIDADOR AND ID_TIPO_USUARIO = 2)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El usuario no es un cuidador o no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que la prioridad sea válida
+        IF NOT EXISTS (SELECT 1 FROM PRIORIDAD WHERE ID_PRIORIDAD = @ID_PRIORIDAD)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'La prioridad seleccionada no es válida';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Insertar evento
+        INSERT INTO EVENTO (TITULO, DESCRIPCION, FECHA_HORA, ID_PRIORIDAD, ID_USUARIO)
+        VALUES (@TITULO, @DESCRIPCION, @FECHA_HORA, @ID_PRIORIDAD, @ID_CUIDADOR);
+
+        SET @ID_RETURN = SCOPE_IDENTITY(); -- Obtener el ID generado
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+
+-- Procedimiento para asignar un paciente a un evento existente
+CREATE OR ALTER PROCEDURE SP_ASIGNAR_PACIENTE_A_EVENTO
+    @ID_EVENTO INT,
+	@ID_CUIDADOR INT,
+    @ID_PACIENTE INT,
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el evento existe y pertenece al cuidador
+        IF NOT EXISTS (SELECT 1 FROM EVENTO WHERE ID_EVENTO = @ID_EVENTO AND ID_USUARIO = @ID_CUIDADOR)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El evento no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que el paciente existe
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_PACIENTE AND ID_TIPO_USUARIO = 1)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El paciente no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Insertar relación evento-usuario
+        INSERT INTO EVENTO_USUARIO (ID_EVENTO, ID_USUARIO, ID_ESTADO)
+        VALUES (@ID_EVENTO, @ID_PACIENTE, 1);
+
+        SET @ID_RETURN = SCOPE_IDENTITY(); -- Obtener el ID generado
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+
+-- Procedimiento para eliminar un paciente de un evento existente
+CREATE OR ALTER PROCEDURE SP_ELIMINAR_PACIENTE_DE_EVENTO
+    @ID_EVENTO INT,
+    @ID_CUIDADOR INT,
+    @ID_PACIENTE INT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el evento existe y pertenece al cuidador
+        IF NOT EXISTS (SELECT 1 FROM EVENTO WHERE ID_EVENTO = @ID_EVENTO AND ID_USUARIO = @ID_CUIDADOR)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El evento no existe o no pertenece al cuidador';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que el paciente está asignado al evento
+        IF NOT EXISTS (SELECT 1 FROM EVENTO_USUARIO WHERE ID_EVENTO = @ID_EVENTO AND ID_USUARIO = @ID_PACIENTE)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El paciente no está asociado a este evento';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Eliminar la relación del paciente con el evento
+        DELETE FROM EVENTO_USUARIO
+        WHERE ID_EVENTO = @ID_EVENTO 
+        AND ID_USUARIO = @ID_PACIENTE;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+
+--SP_MODIFICAR_EVENTO
+CREATE OR ALTER PROCEDURE SP_MODIFICAR_EVENTO
+    @ID_EVENTO INT,
+    @ID_CUIDADOR INT,
+    @TITULO VARCHAR(255),
+    @DESCRIPCION VARCHAR(255) = NULL,
+    @FECHA_HORA DATETIME,
+    @ID_PRIORIDAD INT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el evento existe y pertenece al cuidador
+        IF NOT EXISTS (SELECT 1 FROM EVENTO WHERE ID_EVENTO = @ID_EVENTO AND ID_USUARIO = @ID_CUIDADOR)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El evento no existe o no pertenece al cuidador';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que la prioridad sea válida
+        IF NOT EXISTS (SELECT 1 FROM PRIORIDAD WHERE ID_PRIORIDAD = @ID_PRIORIDAD)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'La prioridad seleccionada no es válida';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Actualizar el evento
+        UPDATE EVENTO
+        SET TITULO = @TITULO, 
+            DESCRIPCION = @DESCRIPCION, 
+            FECHA_HORA = @FECHA_HORA, 
+            ID_PRIORIDAD = @ID_PRIORIDAD
+        WHERE ID_EVENTO = @ID_EVENTO;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+--Eliminar eventos y sus relaciones con los pacientes existentes
+CREATE OR ALTER PROCEDURE SP_ELIMINAR_EVENTO
+    @ID_EVENTO INT,
+    @ID_CUIDADOR INT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el evento existe y pertenece al cuidador
+        IF NOT EXISTS (SELECT 1 FROM EVENTO WHERE ID_EVENTO = @ID_EVENTO AND ID_USUARIO = @ID_CUIDADOR)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El evento no existe o no pertenece al cuidador';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Eliminar todas las relaciones en la tabla EVENTO_USUARIO
+        DELETE FROM EVENTO_USUARIO 
+        WHERE ID_EVENTO = @ID_EVENTO;
+
+        -- Eliminar el evento de la tabla EVENTO
+        DELETE FROM EVENTO 
+        WHERE ID_EVENTO = @ID_EVENTO;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
+--SP obtener eventos perspectiva de usuario
+CREATE OR ALTER PROCEDURE SP_OBTENER_EVENTOS_PACIENTE
+    @ID_PACIENTE INT,
+	 @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        -- Obtener todos los eventos asociados al paciente, sin importar el cuidador
+        SELECT 
+            E.ID_EVENTO, -- Identificador único del evento
+            E.TITULO, -- Título del evento
+            E.DESCRIPCION, -- Descripción opcional del evento
+            E.FECHA_HORA, -- Fecha y hora programada para el evento
+            P.ID_PRIORIDAD, -- Identificador de la prioridad del evento (1: Baja, 2: Media, 3: Alta)
+            P.DESCRIPCION AS PRIORIDAD, -- Nombre de la prioridad (Baja, Media, Alta)
+            U.ID_USUARIO AS ID_CUIDADOR, -- Identificador del cuidador que creó el evento
+            U.NOMBRE AS NOMBRE_CUIDADOR -- Nombre del cuidador que creó el evento
+        FROM EVENTO E
+        -- Relaciona el evento con la prioridad
+        INNER JOIN PRIORIDAD P ON E.ID_PRIORIDAD = P.ID_PRIORIDAD
+        -- Relaciona el evento con los pacientes asignados
+        INNER JOIN EVENTO_USUARIO EU ON E.ID_EVENTO = EU.ID_EVENTO
+        -- Relaciona el evento con el cuidador que lo creó
+        INNER JOIN USUARIO U ON E.ID_USUARIO = U.ID_USUARIO
+        -- Filtra los eventos asignados al paciente solicitado
+        WHERE EU.ID_USUARIO = @ID_PACIENTE;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
+--SP obtener eventos perspectiva cuidador
+CREATE OR ALTER PROCEDURE SP_OBTENER_EVENTOS_CUIDADOR
+    @ID_CUIDADOR INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Obtener los eventos del cuidador con la lista de pacientes en formato JSON
+    SELECT 
+        E.ID_EVENTO,
+        E.TITULO,
+        E.DESCRIPCION,
+        E.FECHA_HORA,
+        P.ID_PRIORIDAD,
+        P.DESCRIPCION AS PRIORIDAD,
+        (
+            SELECT U.ID_USUARIO AS ID, U.NOMBRE AS NOMBRE
+            FROM EVENTO_USUARIO EU
+            INNER JOIN USUARIO U ON EU.ID_USUARIO = U.ID_USUARIO
+            WHERE EU.ID_EVENTO = E.ID_EVENTO
+            FOR JSON PATH
+        ) AS PACIENTES
+    FROM EVENTO E
+    INNER JOIN PRIORIDAD P ON E.ID_PRIORIDAD = P.ID_PRIORIDAD
+    WHERE E.ID_USUARIO = @ID_CUIDADOR;
+END;
+
