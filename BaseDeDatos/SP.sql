@@ -824,7 +824,7 @@ BEGIN
     END CATCH
 END;
 
---SP optener eventos perspectiva de usuario
+--SP obtener eventos perspectiva de usuario
 CREATE OR ALTER PROCEDURE SP_OBTENER_EVENTOS_PACIENTE
     @ID_PACIENTE INT,
 	 @ID_RETURN INT OUTPUT,
@@ -860,3 +860,31 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+
+--SP obtener eventos perspectiva cuidador
+CREATE OR ALTER PROCEDURE SP_OBTENER_EVENTOS_CUIDADOR
+    @ID_CUIDADOR INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Obtener los eventos del cuidador con la lista de pacientes en formato JSON
+    SELECT 
+        E.ID_EVENTO,
+        E.TITULO,
+        E.DESCRIPCION,
+        E.FECHA_HORA,
+        P.ID_PRIORIDAD,
+        P.DESCRIPCION AS PRIORIDAD,
+        (
+            SELECT U.ID_USUARIO AS ID, U.NOMBRE AS NOMBRE
+            FROM EVENTO_USUARIO EU
+            INNER JOIN USUARIO U ON EU.ID_USUARIO = U.ID_USUARIO
+            WHERE EU.ID_EVENTO = E.ID_EVENTO
+            FOR JSON PATH
+        ) AS PACIENTES
+    FROM EVENTO E
+    INNER JOIN PRIORIDAD P ON E.ID_PRIORIDAD = P.ID_PRIORIDAD
+    WHERE E.ID_USUARIO = @ID_CUIDADOR;
+END;
+
