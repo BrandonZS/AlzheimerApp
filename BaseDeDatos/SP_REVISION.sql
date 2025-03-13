@@ -30,4 +30,24 @@ BEGIN
             ROLLBACK TRANSACTION;
             RETURN;
         END
-GO
+
+        -- Insertar mensaje
+        INSERT INTO MENSAJE (CONTENIDO, ID_USUARIO, FECHA_HORA)
+        VALUES (@CONTENIDO, @ID_CUIDADOR, GETDATE());
+
+        SET @ID_RETURN = SCOPE_IDENTITY(); -- Obtener el ID del mensaje generado
+
+        -- Asignar el mensaje al paciente
+        INSERT INTO MENSAJE_USUARIO (ID_MENSAJE, ID_USUARIO, ID_ESTADO, HORA_RECIBIDO)
+        VALUES (@ID_RETURN, @ID_PACIENTE, 1, NULL); -- Estado 1: Enviado
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
