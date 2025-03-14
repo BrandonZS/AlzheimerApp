@@ -299,6 +299,16 @@ BEGIN
             RETURN;
         END
 
+        -- Validar que el juego ya no esté asignado al paciente
+        IF EXISTS (SELECT 1 FROM JUEGO_USUARIO WHERE ID_JUEGO = @ID_JUEGO AND ID_USUARIO = @ID_PACIENTE)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 3;
+            SET @ERROR_DESCRIPTION = 'El paciente ya tiene asignado este juego';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
         -- Asignar el juego al paciente
         INSERT INTO JUEGO_USUARIO (ID_JUEGO, ID_USUARIO)
         VALUES (@ID_JUEGO, @ID_PACIENTE);
@@ -313,10 +323,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
-
-
-
-go
+GO
 
 
 
