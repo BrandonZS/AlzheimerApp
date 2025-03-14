@@ -144,3 +144,26 @@ BEGIN
 END;
 go
 
+--SP para obtener los juegos creados
+
+CREATE OR ALTER PROCEDURE SP_OBTENER_JUEGOS_CREADOS
+    @ID_CUIDADOR INT
+AS
+BEGIN
+    BEGIN TRY
+        -- Obtener los juegos creados por el cuidador con el número de preguntas asociadas
+        SELECT 
+            J.ID_JUEGO,
+            J.NOMBRE,
+            (SELECT COUNT(*) FROM PREGUNTA WHERE ID_JUEGO = J.ID_JUEGO) AS TOTAL_PREGUNTAS
+        FROM JUEGO J
+        INNER JOIN USUARIO U ON U.ID_USUARIO = @ID_CUIDADOR
+        WHERE U.ID_TIPO_USUARIO = 2; -- Solo cuidadores pueden crear juegos
+    END TRY
+    BEGIN CATCH
+    END CATCH
+END;
+
+
+go
+
