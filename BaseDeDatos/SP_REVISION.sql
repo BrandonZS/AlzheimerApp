@@ -166,7 +166,65 @@ END;
 
 go
 
---SP para agregar una pregunta con imagen
+
+-- SP agregar pergunta
+
+CREATE OR ALTER PROCEDURE SP_AGREGAR_PREGUNTA_CON_IMAGEN
+    @ID_JUEGO INT,
+    @TITULO VARCHAR(255),
+    @DESCRIPCION VARCHAR(MAX),
+    @BINARIO_FOTO VARBINARY(MAX),
+    @TITULO_IMAGEN VARCHAR(255),
+    @ID_USUARIO INT,
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    DECLARE @ID_IMAGEN INT;
+    
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el juego exista
+        IF NOT EXISTS (SELECT 1 FROM JUEGO WHERE ID_JUEGO = @ID_JUEGO)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El juego no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Insertar la imagen
+        INSERT INTO IMAGEN (BINARIO_FOTO, TITULO, ID_USUARIO)
+        VALUES (@BINARIO_FOTO, @TITULO_IMAGEN, @ID_USUARIO);
+
+        -- Obtener el ID de la imagen creada
+        SET @ID_IMAGEN = SCOPE_IDENTITY();
+
+        -- Insertar la pregunta con la imagen asociada
+        INSERT INTO PREGUNTA (TITULO, DESCRIPCION, ID_JUEGO, ID_IMAGEN)
+        VALUES (@TITULO, @DESCRIPCION, @ID_JUEGO, @ID_IMAGEN);
+
+        -- Obtener el ID de la pregunta creada
+        SET @ID_RETURN = SCOPE_IDENTITY();
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
+
+GO
+
+
+--SP para agregar respuestas  con imagen
 CREATE OR ALTER PROCEDURE SP_AGREGAR_RESPUESTA
     @ID_PREGUNTA INT,
     @DESCRIPCION VARCHAR(255),
@@ -215,49 +273,6 @@ BEGIN
     END CATCH
 END;
 GO
-
-
---SP para agregar opciones de respuesta
-CREATE OR ALTER PROCEDURE SP_AGREGAR_RESPUESTA
-    @ID_PREGUNTA INT,
-    @DESCRIPCION VARCHAR(255),
-    @CONDICION VARCHAR(255),
-    @ID_RETURN INT OUTPUT,
-    @ERROR_ID INT OUTPUT,
-    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
-AS
-BEGIN
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        -- Validar que la pregunta existe
-        IF NOT EXISTS (SELECT 1 FROM PREGUNTA WHERE ID_PREGUNTA = @ID_PREGUNTA)
-        BEGIN
-            SET @ID_RETURN = -1;
-            SET @ERROR_ID = 1;
-            SET @ERROR_DESCRIPTION = 'La pregunta no existe';
-            ROLLBACK TRANSACTION;
-            RETURN;
-        END
-
-        -- Insertar la opción de respuesta
-        INSERT INTO OPCION (DESCRIPCION, CONDICION, ID_PREGUNTA)
-        VALUES (@DESCRIPCION, @CONDICION, @ID_PREGUNTA);
-
-        SET @ID_RETURN = SCOPE_IDENTITY(); -- Obtener el ID de la opción creada
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        SET @ID_RETURN = -1;
-        SET @ERROR_ID = ERROR_NUMBER();
-        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
-    END CATCH
-END;
-
-
-go
 
 
 
