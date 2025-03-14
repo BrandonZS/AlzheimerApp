@@ -307,3 +307,32 @@ END;
 
 
 go
+
+
+
+--SP para obtener las preguntas con su imagen
+
+CREATE OR ALTER PROCEDURE SP_OBTENER_PREGUNTAS_JUEGO
+    @ID_JUEGO INT
+AS
+BEGIN
+    BEGIN TRY
+        -- Obtener las preguntas con la imagen asociada
+        SELECT 
+            P.ID_PREGUNTA,
+            P.TITULO,
+            P.DESCRIPCION,
+            I.TITULO AS IMAGEN_TITULO,
+            I.BINARIO_FOTO AS IMAGEN_BINARIA,
+            (SELECT O.ID_OPCION, O.DESCRIPCION, O.CONDICION
+             FROM OPCION O
+             WHERE O.ID_PREGUNTA = P.ID_PREGUNTA
+             FOR JSON PATH) AS OPCIONES
+        FROM PREGUNTA P
+        INNER JOIN IMAGEN I ON P.ID_IMAGEN = I.ID_IMAGEN
+        WHERE P.ID_JUEGO = @ID_JUEGO;
+    END TRY
+    BEGIN CATCH
+    END CATCH
+END;
+go
