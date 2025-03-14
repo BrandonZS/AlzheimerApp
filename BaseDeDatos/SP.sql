@@ -946,3 +946,82 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+GO
+
+-- Procedimiento para obtener los mensajes de un paciente y actualizar su estado si no han sido recibidos
+CREATE OR ALTER PROCEDURE SP_OBTENER_MENSAJES_PACIENTE
+    @ID_PACIENTE INT,
+	@ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Actualizar el estado de los mensajes no recibidos (ID_ESTADO = 1 → 2)
+        UPDATE MENSAJE
+        SET ID_ESTADO = 2, FECHA_RECIBIDO = GETDATE()
+        WHERE ID_USUARIO_PACIENTE = @ID_PACIENTE AND ID_ESTADO = 1;
+
+        -- Obtener todos los mensajes asignados al paciente
+        SELECT 
+            M.ID_MENSAJE,
+            M.CONTENIDO,
+            M.FECHA_ENVIADO,
+            M.ID_USUARIO_CUIDADOR AS ID_CUIDADOR,
+            U.NOMBRE AS NOMBRE_CUIDADOR,
+            M.ID_ESTADO
+        FROM MENSAJE M
+        INNER JOIN USUARIO U ON M.ID_USUARIO_CUIDADOR = U.ID_USUARIO
+        WHERE M.ID_USUARIO_PACIENTE = @ID_PACIENTE;
+
+        -- Si todo salió bien, confirmar los cambios
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+        ROLLBACK TRANSACTION;
+    END CATCH
+END;
+GO
+
+-- Procedimiento para actualizar el estado de los mensajes como 'vistos'
+CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_ESTADO_MENSAJES
+    @ID_PACIENTE INT,
+	@ID_MENSAJE INT,
+	@ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+		
+		IF NOT EXISTS ( SELECT 1 FROM USUARIO WHERE @ID_PACIENTE = ID_USUARIO AND ID_TIPO_USUARIO = 1)
+		BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El usuario no es un PACIENTE o no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+		END
+		
+		IF NOT EXISTS ( SELECT 1 FROM MENSAJE WHERE @ID_MENSAJE = ID_MENSAJE AND @ID_PACIENTE = ID_USUARIO_PACIENTE)
+		BEGIN
+		    SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'NO EXISTE EL MENSAJE O NO PERTENECE AL PACIENTE';
+            ROLLBACK TRANSACTION;
+            RETURN;
+		END
+
+        -- Actualizar el estado del mensaje a leído y registrar la hora de recepción
+        UPDATE MENSAJE
+        SET ID_ESTADO = 3
+        WHERE ID_USUARIO_PACIENTE = @ID_PACIENTE AND ID_ESTADO = 2 AND @ID_MENSAJE = ID_MENSAJE
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+    END CATCH
+END;
+GO
