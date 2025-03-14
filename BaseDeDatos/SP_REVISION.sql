@@ -328,13 +328,19 @@ GO
 
 
 --SP para obtener las preguntas con su imagen
-
 CREATE OR ALTER PROCEDURE SP_OBTENER_PREGUNTAS_JUEGO
     @ID_JUEGO INT
 AS
 BEGIN
     BEGIN TRY
-        -- Obtener las preguntas con la imagen asociada
+        -- Validar que el juego exista
+        IF NOT EXISTS (SELECT 1 FROM JUEGO WHERE ID_JUEGO = @ID_JUEGO)
+        BEGIN
+            PRINT 'El juego no existe';
+            RETURN;
+        END
+
+        -- Obtener las preguntas con la imagen asociada y las opciones formateadas en JSON
         SELECT 
             P.ID_PREGUNTA,
             P.TITULO,
@@ -344,14 +350,16 @@ BEGIN
             (SELECT O.ID_OPCION, O.DESCRIPCION, O.CONDICION
              FROM OPCION O
              WHERE O.ID_PREGUNTA = P.ID_PREGUNTA
-             FOR JSON PATH) AS OPCIONES
+             FOR JSON PATH, INCLUDE_NULL_VALUES) AS OPCIONES
         FROM PREGUNTA P
         INNER JOIN IMAGEN I ON P.ID_IMAGEN = I.ID_IMAGEN
         WHERE P.ID_JUEGO = @ID_JUEGO;
     END TRY
     BEGIN CATCH
+        PRINT ERROR_MESSAGE();
     END CATCH
 END;
+
 go
 
 
