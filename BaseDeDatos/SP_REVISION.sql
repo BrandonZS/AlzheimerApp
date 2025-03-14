@@ -263,3 +263,47 @@ END;
 
 
 go
+
+
+
+--SP para asignar un juego a un paciente
+CREATE OR ALTER PROCEDURE SP_ASIGNAR_JUEGO_A_PACIENTE
+    @ID_JUEGO INT,
+    @ID_CUIDADOR INT,
+    @ID_PACIENTE INT,
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el paciente está relacionado con el cuidador
+        IF NOT EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_CUIDADOR = @ID_CUIDADOR AND ID_USUARIO_PACIENTE = @ID_PACIENTE)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El paciente no está asignado a este cuidador';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Asignar el juego al paciente
+        INSERT INTO JUEGO_USUARIO (ID_JUEGO, ID_USUARIO)
+        VALUES (@ID_JUEGO, @ID_PACIENTE);
+
+        SET @ID_RETURN = @ID_JUEGO;
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
+
+
+go
