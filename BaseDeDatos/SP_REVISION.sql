@@ -336,3 +336,41 @@ BEGIN
     END CATCH
 END;
 go
+
+
+
+
+--SP para eliminar un juego y sus relaciones
+
+CREATE OR ALTER PROCEDURE SP_ELIMINAR_JUEGO
+    @ID_JUEGO INT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Eliminar relaciones con los pacientes
+        DELETE FROM JUEGO_USUARIO WHERE ID_JUEGO = @ID_JUEGO;
+
+        -- Eliminar opciones de las preguntas
+        DELETE FROM OPCION WHERE ID_PREGUNTA IN (SELECT ID_PREGUNTA FROM PREGUNTA WHERE ID_JUEGO = @ID_JUEGO);
+
+        -- Eliminar preguntas del juego
+        DELETE FROM PREGUNTA WHERE ID_JUEGO = @ID_JUEGO;
+
+        -- Eliminar el juego
+        DELETE FROM JUEGO WHERE ID_JUEGO = @ID_JUEGO;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
+
+go
