@@ -946,3 +946,42 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
+GO
+
+-- Procedimiento para obtener los mensajes de un paciente y actualizar su estado si no han sido recibidos
+CREATE OR ALTER PROCEDURE SP_OBTENER_MENSAJES_PACIENTE
+    @ID_PACIENTE INT,
+	@ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        -- Actualizar el estado de los mensajes no recibidos (ID_ESTADO = 1 → 2)
+        UPDATE MENSAJE
+        SET ID_ESTADO = 2
+        WHERE ID_USUARIO_PACIENTE = @ID_PACIENTE AND ID_ESTADO = 1;
+
+        -- Obtener todos los mensajes asignados al paciente
+        SELECT 
+            M.ID_MENSAJE,
+            M.CONTENIDO,
+            M.FECHA_ENVIADO,
+            M.ID_USUARIO_CUIDADOR AS ID_CUIDADOR,
+            U.NOMBRE AS NOMBRE_CUIDADOR,
+            M.ID_ESTADO
+        FROM MENSAJE M
+        INNER JOIN USUARIO U ON M.ID_USUARIO_CUIDADOR = U.ID_USUARIO
+        WHERE M.ID_USUARIO_PACIENTE = @ID_PACIENTE;
+
+        -- Si todo salió bien, confirmar los cambios
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+        ROLLBACK TRANSACTION;
+    END CATCH
+END;
+GO
