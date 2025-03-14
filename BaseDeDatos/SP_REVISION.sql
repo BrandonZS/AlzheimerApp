@@ -167,47 +167,43 @@ END;
 go
 
 --SP para agregar una pregunta con imagen
-
-CREATE OR ALTER PROCEDURE SP_AGREGAR_PREGUNTA_CON_IMAGEN
-    @ID_JUEGO INT,
-    @TITULO VARCHAR(255),
-    @DESCRIPCION VARCHAR(MAX),
-    @BINARIO_FOTO VARBINARY(MAX),
-    @TITULO_IMAGEN VARCHAR(255),
-    @ID_USUARIO INT, -- Usuario que sube la imagen
+CREATE OR ALTER PROCEDURE SP_AGREGAR_RESPUESTA
+    @ID_PREGUNTA INT,
+    @DESCRIPCION VARCHAR(255),
+    @CONDICION BIT, -- 1 = Correcta, 0 = Incorrecta
     @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
-    DECLARE @ID_IMAGEN INT;
-    
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Validar que el juego exista
-        IF NOT EXISTS (SELECT 1 FROM JUEGO WHERE ID_JUEGO = @ID_JUEGO)
+        -- Validar que la pregunta exista
+        IF NOT EXISTS (SELECT 1 FROM PREGUNTA WHERE ID_PREGUNTA = @ID_PREGUNTA)
         BEGIN
             SET @ID_RETURN = -1;
             SET @ERROR_ID = 1;
-            SET @ERROR_DESCRIPTION = 'El juego no existe';
+            SET @ERROR_DESCRIPTION = 'La pregunta no existe';
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Insertar la imagen
-        INSERT INTO IMAGEN (BINARIO_FOTO, TITULO, ID_USUARIO)
-        VALUES (@BINARIO_FOTO, @TITULO_IMAGEN, @ID_USUARIO);
+        -- Si la nueva opción es la correcta, asegurarse de que no haya otra opción correcta ya asignada
+        IF @CONDICION = 1 AND EXISTS (SELECT 1 FROM OPCION WHERE ID_PREGUNTA = @ID_PREGUNTA AND CONDICION = 1)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'Ya existe una opción marcada como correcta para esta pregunta';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        -- Obtener el ID de la imagen creada
-        SET @ID_IMAGEN = SCOPE_IDENTITY();
+        -- Insertar la opción de respuesta
+        INSERT INTO OPCION (DESCRIPCION, CONDICION, ID_PREGUNTA)
+        VALUES (@DESCRIPCION, @CONDICION, @ID_PREGUNTA);
 
-        -- Insertar la pregunta con la imagen asociada
-        INSERT INTO PREGUNTA (TITULO, DESCRIPCION, ID_JUEGO, ID_IMAGEN)
-        VALUES (@TITULO, @DESCRIPCION, @ID_JUEGO, @ID_IMAGEN);
-
-        -- Obtener el ID de la pregunta creada
-        SET @ID_RETURN = SCOPE_IDENTITY();
+        SET @ID_RETURN = SCOPE_IDENTITY(); -- Obtener el ID de la opción creada
 
         COMMIT TRANSACTION;
     END TRY
@@ -218,7 +214,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
-go
+GO
 
 
 --SP para agregar opciones de respuesta
