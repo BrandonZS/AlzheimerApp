@@ -142,10 +142,9 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
-go
+
 
 --SP para obtener los juegos creados
-
 CREATE OR ALTER PROCEDURE SP_OBTENER_JUEGOS_CREADOS
     @ID_CUIDADOR INT
 AS
@@ -157,17 +156,18 @@ BEGIN
             J.NOMBRE,
             (SELECT COUNT(*) FROM PREGUNTA WHERE ID_JUEGO = J.ID_JUEGO) AS TOTAL_PREGUNTAS
         FROM JUEGO J
-        INNER JOIN USUARIO U ON U.ID_USUARIO = @ID_CUIDADOR
-        WHERE U.ID_TIPO_USUARIO = 2; -- Solo cuidadores pueden crear juegos
+        WHERE EXISTS (SELECT 1 FROM PREGUNTA WHERE ID_JUEGO = J.ID_JUEGO);
     END TRY
     BEGIN CATCH
     END CATCH
 END;
 
 
+
 go
 
---SP para agregar una pregunta con imagen
+
+-- SP agregar pergunta
 
 CREATE OR ALTER PROCEDURE SP_AGREGAR_PREGUNTA_CON_IMAGEN
     @ID_JUEGO INT,
@@ -175,7 +175,7 @@ CREATE OR ALTER PROCEDURE SP_AGREGAR_PREGUNTA_CON_IMAGEN
     @DESCRIPCION VARCHAR(MAX),
     @BINARIO_FOTO VARBINARY(MAX),
     @TITULO_IMAGEN VARCHAR(255),
-    @ID_USUARIO INT, -- Usuario que sube la imagen
+    @ID_USUARIO INT,
     @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
@@ -219,14 +219,16 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
-go
 
 
---SP para agregar opciones de respuesta
+GO
+
+
+--SP para agregar respuestas  con imagen
 CREATE OR ALTER PROCEDURE SP_AGREGAR_RESPUESTA
     @ID_PREGUNTA INT,
     @DESCRIPCION VARCHAR(255),
-    @CONDICION VARCHAR(255),
+    @CONDICION BIT, -- 1 = Correcta, 0 = Incorrecta
     @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
@@ -235,12 +237,22 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Validar que la pregunta existe
+        -- Validar que la pregunta exista
         IF NOT EXISTS (SELECT 1 FROM PREGUNTA WHERE ID_PREGUNTA = @ID_PREGUNTA)
         BEGIN
             SET @ID_RETURN = -1;
             SET @ERROR_ID = 1;
             SET @ERROR_DESCRIPTION = 'La pregunta no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Si la nueva opción es la correcta, asegurarse de que no haya otra opción correcta ya asignada
+        IF @CONDICION = 1 AND EXISTS (SELECT 1 FROM OPCION WHERE ID_PREGUNTA = @ID_PREGUNTA AND CONDICION = 1)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'Ya existe una opción marcada como correcta para esta pregunta';
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -260,9 +272,7 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
-
-
-go
+GO
 
 
 
@@ -289,6 +299,16 @@ BEGIN
             RETURN;
         END
 
+        -- Validar que el juego ya no esté asignado al paciente
+        IF EXISTS (SELECT 1 FROM JUEGO_USUARIO WHERE ID_JUEGO = @ID_JUEGO AND ID_USUARIO = @ID_PACIENTE)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 3;
+            SET @ERROR_DESCRIPTION = 'El paciente ya tiene asignado este juego';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
         -- Asignar el juego al paciente
         INSERT INTO JUEGO_USUARIO (ID_JUEGO, ID_USUARIO)
         VALUES (@ID_JUEGO, @ID_PACIENTE);
@@ -303,21 +323,24 @@ BEGIN
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
-
-
-
-go
+GO
 
 
 
 --SP para obtener las preguntas con su imagen
-
 CREATE OR ALTER PROCEDURE SP_OBTENER_PREGUNTAS_JUEGO
     @ID_JUEGO INT
 AS
 BEGIN
     BEGIN TRY
-        -- Obtener las preguntas con la imagen asociada
+        -- Validar que el juego exista
+        IF NOT EXISTS (SELECT 1 FROM JUEGO WHERE ID_JUEGO = @ID_JUEGO)
+        BEGIN
+            PRINT 'El juego no existe';
+            RETURN;
+        END
+
+        -- Obtener las preguntas con la imagen asociada y las opciones formateadas en JSON
         SELECT 
             P.ID_PREGUNTA,
             P.TITULO,
@@ -327,21 +350,22 @@ BEGIN
             (SELECT O.ID_OPCION, O.DESCRIPCION, O.CONDICION
              FROM OPCION O
              WHERE O.ID_PREGUNTA = P.ID_PREGUNTA
-             FOR JSON PATH) AS OPCIONES
+             FOR JSON PATH, INCLUDE_NULL_VALUES) AS OPCIONES
         FROM PREGUNTA P
         INNER JOIN IMAGEN I ON P.ID_IMAGEN = I.ID_IMAGEN
         WHERE P.ID_JUEGO = @ID_JUEGO;
     END TRY
     BEGIN CATCH
+        PRINT ERROR_MESSAGE();
     END CATCH
 END;
+
 go
 
 
 
 
 --SP para eliminar un juego y sus relaciones
-
 CREATE OR ALTER PROCEDURE SP_ELIMINAR_JUEGO
     @ID_JUEGO INT,
     @ERROR_ID INT OUTPUT,
@@ -351,8 +375,23 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Eliminar relaciones con los pacientes
-        DELETE FROM JUEGO_USUARIO WHERE ID_JUEGO = @ID_JUEGO;
+        -- Validar que el juego existe
+        IF NOT EXISTS (SELECT 1 FROM JUEGO WHERE ID_JUEGO = @ID_JUEGO)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El juego no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que no tenga pacientes asignados
+        IF EXISTS (SELECT 1 FROM JUEGO_USUARIO WHERE ID_JUEGO = @ID_JUEGO)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'No se puede eliminar el juego porque tiene pacientes asignados';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
         -- Eliminar opciones de las preguntas
         DELETE FROM OPCION WHERE ID_PREGUNTA IN (SELECT ID_PREGUNTA FROM PREGUNTA WHERE ID_JUEGO = @ID_JUEGO);
@@ -374,3 +413,49 @@ END;
 
 
 go
+
+
+----------------------------------------------------------------------------------------------------
+
+CREATE OR ALTER PROCEDURE SP_OBTENER_PACIENTES_CUIDADOR
+    @ID_CUIDADOR INT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        -- Validar que el usuario es un cuidador
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_CUIDADOR AND ID_TIPO_USUARIO = 2)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El usuario no es un cuidador o no existe';
+            RETURN;
+        END
+
+        -- Verificar si el cuidador tiene pacientes asignados
+        IF NOT EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_CUIDADOR = @ID_CUIDADOR)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El cuidador no tiene pacientes asignados';
+            RETURN;
+        END
+
+        -- Obtener los pacientes asignados al cuidador
+        SELECT 
+            U.ID_USUARIO AS ID_PACIENTE,
+            U.NOMBRE,
+            U.FECHA_NACIMIENTO,
+            U.FOTO_PERFIL
+        FROM CUIDADOR_PACIENTE CP
+        INNER JOIN USUARIO U ON CP.ID_USUARIO_PACIENTE = U.ID_USUARIO
+        WHERE CP.ID_USUARIO_CUIDADOR = @ID_CUIDADOR;
+
+
+    END TRY
+    BEGIN CATCH
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
+GO
