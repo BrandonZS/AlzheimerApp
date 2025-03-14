@@ -887,4 +887,62 @@ BEGIN
     INNER JOIN PRIORIDAD P ON E.ID_PRIORIDAD = P.ID_PRIORIDAD
     WHERE E.ID_USUARIO = @ID_CUIDADOR;
 END;
+GO
 
+-- Procedimiento para enviar un mensaje a un paciente
+CREATE OR ALTER PROCEDURE SP_ENVIAR_MENSAJE
+    @ID_CUIDADOR INT,
+    @ID_PACIENTE INT,
+    @CONTENIDO VARCHAR(255),
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el usuario que envía el mensaje es un cuidador
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_CUIDADOR AND ID_TIPO_USUARIO = 2)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El usuario no es un cuidador o no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+    
+        -- Validar que el paciente existe
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_PACIENTE AND ID_TIPO_USUARIO = 1)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El paciente no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+		IF NOT EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_CUIDADOR = @ID_CUIDADOR AND ID_USUARIO_PACIENTE = @ID_PACIENTE)
+		BEGIN
+			SET @ID_RETURN = -1;
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'NO SE ENCONTRÓ RELACION CON EL CLIENTE';
+            ROLLBACK TRANSACTION;
+            RETURN;
+		END
+
+        -- Insertar mensaje
+        INSERT INTO MENSAJE (CONTENIDO, FECHA_ENVIADO, FECHA_RECIBIDO, ID_USUARIO_CUIDADOR, ID_USUARIO_PACIENTE, ID_ESTADO) 
+        VALUES (@CONTENIDO, GETDATE(), NULL, @ID_CUIDADOR, @ID_PACIENTE, 1)
+
+        SET @ID_RETURN = SCOPE_IDENTITY(); -- Obtener el ID del mensaje generado
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
