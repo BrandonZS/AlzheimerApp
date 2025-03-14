@@ -220,3 +220,46 @@ BEGIN
     END CATCH
 END;
 go
+
+
+--SP para agregar opciones de respuesta
+CREATE OR ALTER PROCEDURE SP_AGREGAR_RESPUESTA
+    @ID_PREGUNTA INT,
+    @DESCRIPCION VARCHAR(255),
+    @CONDICION VARCHAR(255),
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que la pregunta existe
+        IF NOT EXISTS (SELECT 1 FROM PREGUNTA WHERE ID_PREGUNTA = @ID_PREGUNTA)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'La pregunta no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Insertar la opción de respuesta
+        INSERT INTO OPCION (DESCRIPCION, CONDICION, ID_PREGUNTA)
+        VALUES (@DESCRIPCION, @CONDICION, @ID_PREGUNTA);
+
+        SET @ID_RETURN = SCOPE_IDENTITY(); -- Obtener el ID de la opción creada
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
+
+go
