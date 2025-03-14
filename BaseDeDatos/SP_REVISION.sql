@@ -366,7 +366,6 @@ go
 
 
 --SP para eliminar un juego y sus relaciones
-
 CREATE OR ALTER PROCEDURE SP_ELIMINAR_JUEGO
     @ID_JUEGO INT,
     @ERROR_ID INT OUTPUT,
@@ -376,8 +375,23 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Eliminar relaciones con los pacientes
-        DELETE FROM JUEGO_USUARIO WHERE ID_JUEGO = @ID_JUEGO;
+        -- Validar que el juego existe
+        IF NOT EXISTS (SELECT 1 FROM JUEGO WHERE ID_JUEGO = @ID_JUEGO)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El juego no existe';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que no tenga pacientes asignados
+        IF EXISTS (SELECT 1 FROM JUEGO_USUARIO WHERE ID_JUEGO = @ID_JUEGO)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'No se puede eliminar el juego porque tiene pacientes asignados';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
         -- Eliminar opciones de las preguntas
         DELETE FROM OPCION WHERE ID_PREGUNTA IN (SELECT ID_PREGUNTA FROM PREGUNTA WHERE ID_JUEGO = @ID_JUEGO);
