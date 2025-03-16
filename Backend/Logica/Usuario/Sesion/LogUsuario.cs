@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Backend.Entidades
+namespace Backend.Logica
 {
-    public class ReqIngresarUsuario
+    public class LogUsuario
     {
-        public Usuario usuario {  get; set; }
+
     }
 }

@@ -49,16 +49,17 @@
     <Compile Include="Entidades\Entity\Pregunta.cs" />
     <Compile Include="Entidades\Entity\Puntaje.cs" />
     <Compile Include="Entidades\Entity\Usuario.cs" />
+    <Compile Include="Entidades\Enums\enumErrores.cs" />
+    <Compile Include="Entidades\Request\ReqIngresarUsuario.cs" />
+    <Compile Include="Entidades\Response\ResIngresarUsuario.cs" />
+    <Compile Include="Logica\Helpers\HelpersValidacion.cs" />
+    <Compile Include="Logica\Usuario\Sesion\LogUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entidades\Enums\" />
-    <Folder Include="Entidades\Request\" />
-    <Folder Include="Entidades\Response\" />
     <Folder Include="Logica\Evento\" />
     <Folder Include="Logica\Juego\" />
     <Folder Include="Logica\Mensaje\" />
-    <Folder Include="Logica\Usuario\Sesion\" />
     <Folder Include="Logica\Usuario\Varios\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
