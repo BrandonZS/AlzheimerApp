@@ -1475,3 +1475,104 @@ BEGIN
     END CATCH
 END;
 GO
+
+
+--LISTA DE ERRORES Y SUS CODIGOS
+
+/*
+NUM_ERROR: 50001
+CODE_ERROR: CORREO_EN_USO
+DESCRIPTION_ERROR: El correo electrónico proporcionado ya está registrado en el sistema. Por favor, utilice otro correo.
+
+NUM_ERROR: 50002
+CODE_ERROR: USUARIO_NO_EXISTE
+DESCRIPTION_ERROR: El usuario solicitado no existe en el sistema o no es válido.
+
+NUM_ERROR: 50003
+CODE_ERROR: PACIENTE_NO_EXISTE
+DESCRIPTION_ERROR: El paciente solicitado no existe en el sistema o no es válido.
+
+NUM_ERROR: 50004
+CODE_ERROR: CUIDADOR_NO_EXISTE
+DESCRIPTION_ERROR: El cuidador solicitado no existe en el sistema o no es válido.
+
+NUM_ERROR: 50005
+CODE_ERROR: PACIENTE_NO_ASIGNADO
+DESCRIPTION_ERROR: El paciente no está asignado al cuidador especificado.
+
+NUM_ERROR: 50006
+CODE_ERROR: PACIENTE_NO_ASOCIADO_EVENTO
+DESCRIPTION_ERROR: El paciente no está asociado al evento indicado.
+
+NUM_ERROR: 50007
+CODE_ERROR: PING_EN_USO
+DESCRIPTION_ERROR: Ya existe un ping activo para este usuario, no se puede generar otro.
+
+NUM_ERROR: 50008
+CODE_ERROR: PACIENTE_NO_ASIGNADO
+DESCRIPTION_ERROR: El paciente no está asignado al cuidador especificado.
+
+NUM_ERROR: 50009
+CODE_ERROR: CODIGO_PACIENTE_NO_EXISTE
+DESCRIPTION_ERROR: El código del paciente es incorrecto o no existe en el sistema.
+
+NUM_ERROR: 50010
+CODE_ERROR: RELACION_NO_EXISTE
+DESCRIPTION_ERROR: No existe una relación válida entre el paciente y el cuidador especificado.
+
+NUM_ERROR: 50011
+CODE_ERROR: RELACION_DUPLICADA
+DESCRIPTION_ERROR: Ya existe una relación activa entre el paciente y el cuidador especificado.
+
+NUM_ERROR: 50012
+CODE_ERROR: JUEGO_NO_EXISTE
+DESCRIPTION_ERROR: El juego solicitado no existe en el sistema o no pertenece al usuario.
+
+NUM_ERROR: 50013
+CODE_ERROR: JUEGO_NO_ELIMINABLE
+DESCRIPTION_ERROR: No se puede eliminar el juego porque tiene pacientes asignados.
+
+NUM_ERROR: 50014
+CODE_ERROR: REGISTRO_DUPLICADO
+DESCRIPTION_ERROR: Ya existe un registro con la misma información en el sistema.
+
+NUM_ERROR: 50015
+CODE_ERROR: EVENTO_NO_EXISTE
+DESCRIPTION_ERROR: El evento solicitado no existe en el sistema o no pertenece al usuario.
+
+NUM_ERROR: 50016
+CODE_ERROR: PIN_NO_EXISTE
+DESCRIPTION_ERROR: No hay un PIN activo para este usuario.
+
+NUM_ERROR: 50017
+CODE_ERROR: PIN_FORMATO_INVALIDO
+DESCRIPTION_ERROR: El PIN debe contener exactamente 6 dígitos numéricos.
+
+NUM_ERROR: 50018
+CODE_ERROR: PIN_INCORRECTO
+DESCRIPTION_ERROR: El PIN proporcionado es incorrecto.
+
+NUM_ERROR: 50019
+CODE_ERROR: CONTRASENA_INCORRECTA
+DESCRIPTION_ERROR: La contraseña actual ingresada es incorrecta.
+
+NUM_ERROR: 50020
+CODE_ERROR: CONTRASENA_NO_SEGURA
+DESCRIPTION_ERROR: La nueva contraseña no cumple con los requisitos de seguridad establecidos.
+
+NUM_ERROR: 50021
+CODE_ERROR: PREGUNTA_NO_EXISTE
+DESCRIPTION_ERROR: La pregunta solicitada no existe en el sistema.
+
+NUM_ERROR: 50022
+CODE_ERROR: RESPUESTA_DUPLICADA
+DESCRIPTION_ERROR: Ya existe una opción marcada como correcta para esta pregunta.
+
+NUM_ERROR: 50023
+CODE_ERROR: REGISTRO_NO_ENCONTRADO
+DESCRIPTION_ERROR: No se encontró el registro solicitado en la base de datos.
+
+NUM_ERROR: 50024
+CODE_ERROR: DATOS_NO_VALIDOS
+DESCRIPTION_ERROR: Los datos proporcionados no son válidos o están incompletos.
+*/
