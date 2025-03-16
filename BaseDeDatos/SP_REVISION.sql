@@ -42,3 +42,31 @@ BEGIN
 END;
 
 GO
+CREATE OR ALTER PROCEDURE SP_OBTENER_ULTIMOS_JUEGOS_JUGADOS
+    @ID_PACIENTE INT
+AS
+BEGIN
+    BEGIN TRY
+        -- Verificar que el paciente exista y que tenga juegos jugados
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_PACIENTE AND ID_TIPO_USUARIO = 1)
+        BEGIN
+            PRINT 'El paciente no existe o no es un paciente válido';
+            RETURN;
+        END
+
+        -- Obtener los últimos 20 juegos jugados por el paciente con sus puntajes individuales
+        SELECT TOP 20
+            P.ID_PUNTAJE,  -- Identificador del puntaje
+            P.ID_JUEGO,     -- Identificador del juego
+            J.NOMBRE AS NOMBRE_JUEGO, -- Nombre del juego
+            P.PUNTAJE,      -- Puntaje obtenido en ese intento
+            P.FECHA_HORA    -- Fecha y hora del intento
+        FROM PUNTAJE P
+        INNER JOIN JUEGO J ON P.ID_JUEGO = J.ID_JUEGO
+        WHERE P.ID_USUARIO = @ID_PACIENTE
+        ORDER BY P.FECHA_HORA DESC; -- Ordenado por la fecha más reciente
+    END TRY
+    BEGIN CATCH
+        PRINT ERROR_MESSAGE();
+    END CATCH
+END;
