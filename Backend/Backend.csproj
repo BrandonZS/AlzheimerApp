@@ -41,10 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entidades\Entity\Evento.cs" />
+    <Compile Include="Entidades\Entity\Juego.cs" />
+    <Compile Include="Entidades\Entity\Mensaje.cs" />
+    <Compile Include="Entidades\Entity\Opcion.cs" />
+    <Compile Include="Entidades\Entity\Ping.cs" />
+    <Compile Include="Entidades\Entity\Pregunta.cs" />
+    <Compile Include="Entidades\Entity\Puntaje.cs" />
+    <Compile Include="Entidades\Entity\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entidades\Entity\" />
     <Folder Include="Entidades\Enums\" />
     <Folder Include="Entidades\Request\" />
     <Folder Include="Entidades\Response\" />
