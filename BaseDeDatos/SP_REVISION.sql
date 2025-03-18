@@ -1,0 +1,270 @@
+<<<<<<< HEAD
+----------------------------------------------------------------------------------------------------
+
+CREATE OR ALTER PROCEDURE SP_OBTENER_PACIENTES_CUIDADOR
+    @ID_CUIDADOR INT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        -- Validar que el usuario es un cuidador
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_CUIDADOR AND ID_TIPO_USUARIO = 2)
+        BEGIN
+            SET @ERROR_ID = 1;
+            SET @ERROR_DESCRIPTION = 'El usuario no es un cuidador o no existe';
+            RETURN;
+        END
+
+        -- Verificar si el cuidador tiene pacientes asignados
+        IF NOT EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_CUIDADOR = @ID_CUIDADOR)
+        BEGIN
+            SET @ERROR_ID = 2;
+            SET @ERROR_DESCRIPTION = 'El cuidador no tiene pacientes asignados';
+            RETURN;
+        END
+
+        -- Obtener los pacientes asignados al cuidador
+        SELECT 
+            U.ID_USUARIO AS ID_PACIENTE,
+            U.NOMBRE,
+            U.FECHA_NACIMIENTO,
+            U.FOTO_PERFIL
+        FROM CUIDADOR_PACIENTE CP
+        INNER JOIN USUARIO U ON CP.ID_USUARIO_PACIENTE = U.ID_USUARIO
+        WHERE CP.ID_USUARIO_CUIDADOR = @ID_CUIDADOR;
+
+
+    END TRY
+    BEGIN CATCH
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+
+GO
+CREATE OR ALTER PROCEDURE SP_OBTENER_ULTIMOS_JUEGOS_JUGADOS
+    @ID_PACIENTE INT
+AS
+BEGIN
+    BEGIN TRY
+        -- Verificar que el paciente exista y que tenga juegos jugados
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_PACIENTE AND ID_TIPO_USUARIO = 1)
+        BEGIN
+            PRINT 'El paciente no existe o no es un paciente válido';
+            RETURN;
+        END
+
+        -- Obtener los últimos 20 juegos jugados por el paciente con sus puntajes individuales
+        SELECT TOP 20
+            P.ID_PUNTAJE,  -- Identificador del puntaje
+            P.ID_JUEGO,     -- Identificador del juego
+            J.NOMBRE AS NOMBRE_JUEGO, -- Nombre del juego
+            P.PUNTAJE,      -- Puntaje obtenido en ese intento
+            P.FECHA_HORA    -- Fecha y hora del intento
+        FROM PUNTAJE P
+        INNER JOIN JUEGO J ON P.ID_JUEGO = J.ID_JUEGO
+        WHERE P.ID_USUARIO = @ID_PACIENTE
+        ORDER BY P.FECHA_HORA DESC; -- Ordenado por la fecha más reciente
+    END TRY
+    BEGIN CATCH
+        PRINT ERROR_MESSAGE();
+    END CATCH
+END;
+
+
+
+----------------------------------------------------------------------------------------------------------
+--Manejo de sesion, se pretende solo manejar 1 sesion por dispositivo
+CREATE TABLE SESION (
+    ID_SESION INT IDENTITY(1,1) NOT NULL,
+    TOKEN NVARCHAR(255) NOT NULL, -- Identificador de la sesión (JWT, GUID, etc.)
+    ID_USUARIO INT NOT NULL,
+    DISPOSITIVO NVARCHAR(255) NOT NULL, -- Identificador del dispositivo (User-Agent, UUID, etc.)
+    IP_ORIGEN NVARCHAR(45) NOT NULL, -- Dirección IP del usuario
+    FECHA_INICIO DATETIME NOT NULL DEFAULT GETDATE(), -- Inicio de sesión
+    FECHA_EXPIRACION DATETIME NOT NULL, -- Expiración de la sesión
+    ESTADO BIT NOT NULL DEFAULT 1, -- 1=Activa, 0=Expirada/Cerrada
+    CONSTRAINT PK_SESION PRIMARY KEY (ID_SESION),
+    CONSTRAINT FK_SESION_USUARIO FOREIGN KEY (ID_USUARIO) REFERENCES USUARIO(ID_USUARIO)
+);
+GO
+
+
+ALTER TABLE USUARIO ADD ID_SESION_ACTUAL INT NULL;
+ALTER TABLE USUARIO ADD CONSTRAINT FK_USUARIO_SESION FOREIGN KEY (ID_SESION_ACTUAL) REFERENCES SESION(ID_SESION);
+GO
+
+
+--Para asegurarnos de que un usuario solo tenga una sesión activa por dispositivo, agregamos una restricción UNIQUe
+ALTER TABLE SESION ADD CONSTRAINT UQ_SESION_USUARIO_DISPOSITIVO UNIQUE (ID_USUARIO, DISPOSITIVO);
+GO
+
+
+
+--sp para manejo de sesion en el login...
+CREATE PROCEDURE [dbo].[sp_Login]
+    @CORREO_ELECTRONICO NVARCHAR(50),
+    @PASSWORD NVARCHAR(MAX),
+    @DISPOSITIVO NVARCHAR(255), -- Identificador del dispositivo
+    @IP_ORIGEN NVARCHAR(45) -- Dirección IP
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ID_USUARIO INT;
+    DECLARE @TOKEN NVARCHAR(255);
+    DECLARE @FECHA_EXPIRACION DATETIME;
+    DECLARE @ID_SESION INT;
+
+    -- 1️ Validar credenciales del usuario
+    SELECT @ID_USUARIO = ID_USUARIO
+    FROM USUARIO
+    WHERE CORREO_ELECTRONICO = @CORREO_ELECTRONICO AND CONTRASENA = @PASSWORD;
+
+    -- Si el usuario no existe, salir
+    IF @ID_USUARIO IS NULL
+    BEGIN
+        PRINT 'Credenciales incorrectas';
+        RETURN;
+    END
+
+    -- 2️ Cerrar sesiones activas en otros dispositivos
+    UPDATE SESION
+    SET ESTADO = 0, FECHA_EXPIRACION = GETDATE()
+    WHERE ID_USUARIO = @ID_USUARIO AND DISPOSITIVO <> @DISPOSITIVO AND ESTADO = 1;
+
+    -- 3️ Generar un nuevo token
+    SET @TOKEN = NEWID(); -- Si usas JWT, cámbialo por tu lógica
+    SET @FECHA_EXPIRACION = DATEADD(MINUTE, 30, GETDATE()); -- Sesión expira en 30 min
+
+    -- 4️ Cerrar sesión en el mismo dispositivo (si existe)
+    UPDATE SESION
+    SET ESTADO = 0, FECHA_EXPIRACION = GETDATE()
+    WHERE ID_USUARIO = @ID_USUARIO AND DISPOSITIVO = @DISPOSITIVO AND ESTADO = 1;
+
+    -- 5️ Insertar nueva sesión
+    INSERT INTO SESION (TOKEN, ID_USUARIO, DISPOSITIVO, IP_ORIGEN, FECHA_INICIO, FECHA_EXPIRACION, ESTADO)
+    VALUES (@TOKEN, @ID_USUARIO, @DISPOSITIVO, @IP_ORIGEN, GETDATE(), @FECHA_EXPIRACION, 1);
+
+    -- Obtener el ID de la sesión recién creada
+    SET @ID_SESION = SCOPE_IDENTITY();
+
+    -- 6️ Actualizar la sesión actual del usuario en USUARIO (opcional)
+    UPDATE USUARIO SET ID_SESION_ACTUAL = @ID_SESION WHERE ID_USUARIO = @ID_USUARIO;
+
+    -- 7️Devolver los datos del usuario y la sesión
+    SELECT 
+        U.ID_USUARIO,
+        U.NOMBRE,
+        U.CORREO_ELECTRONICO,
+        @TOKEN AS TOKEN_SESION,
+        @FECHA_EXPIRACION AS EXPIRACION
+    FROM USUARIO U
+    WHERE U.ID_USUARIO = @ID_USUARIO;
+END;
+GO
+
+
+--Procedimiento para manejo de errores en la BD
+--tabl de bitacora 
+CREATE TABLE BITACORA_ERRORES (
+    ID_ERROR INT IDENTITY(1,1) PRIMARY KEY,
+    CODIGO_ERROR NVARCHAR(50) NOT NULL, -- Código único del error (Ejemplo: ERR001)
+    SP_NOMBRE NVARCHAR(255) NOT NULL, -- Procedimiento almacenado donde ocurre
+    DESCRIPCION NVARCHAR(MAX) NOT NULL, -- Mensaje de error predefinido
+    SOLUCION_SUGERIDA NVARCHAR(MAX) NULL -- Solución recomendada (Opcional)
+);
+GO
+
+--Insert into de los errores regsitardos en la BD 
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR001', 'SP_DESCONOCIDO', 'Correo existente');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR002', 'SP_DESCONOCIDO', 'Usuario no encontrado');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR003', 'SP_DESCONOCIDO', 'El usuario no existe o no es un paciente');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR004', 'SP_DESCONOCIDO', 'El usuario ya tiene un PIN activo');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR005', 'SP_DESCONOCIDO', 'El PIN debe contener exactamente 6 dígitos numéricos');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR006', 'SP_DESCONOCIDO', 'El usuario no existe');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR007', 'SP_DESCONOCIDO', 'PIN incorrecto.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR008', 'SP_DESCONOCIDO', 'El PIN actual es incorrecto o no existe');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR009', 'SP_DESCONOCIDO', 'El nuevo PIN debe contener exactamente 6 dígitos numéricos');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR010', 'SP_DESCONOCIDO', 'USUARIO NO EXISTE');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR011', 'SP_DESCONOCIDO', 'La contraseña actual es incorrecta');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR012', 'SP_DESCONOCIDO', 'La nueva contraseña no puede ser igual a la actual');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR013', 'SP_DESCONOCIDO', 'El código del paciente es incorrecto o no existe.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR014', 'SP_DESCONOCIDO', 'El ID del cuidador no es válido.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR015', 'SP_DESCONOCIDO', 'La relación entre paciente y cuidador ya existe.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR016', 'SP_DESCONOCIDO', 'El usuario no existe.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR017', 'SP_DESCONOCIDO', 'No hay un PING activo para este usuario.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR018', 'SP_DESCONOCIDO', 'El PIN proporcionado es incorrecto.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR019', 'SP_DESCONOCIDO', 'El usuario paciente no existe o no es un paciente.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR020', 'SP_DESCONOCIDO', 'El usuario cuidador no existe.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR021', 'SP_DESCONOCIDO', 'La relación entre el paciente y el cuidador no existe o ya fue terminada.');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR022', 'SP_DESCONOCIDO', 'El usuario no es un cuidador o no existe');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR023', 'SP_DESCONOCIDO', 'La prioridad seleccionada no es válida');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR024', 'SP_DESCONOCIDO', 'El evento no existe');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR025', 'SP_DESCONOCIDO', 'El paciente no existe');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR026', 'SP_DESCONOCIDO', 'El evento no existe o no pertenece al cuidador');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR027', 'SP_DESCONOCIDO', 'El paciente no está asociado a este evento');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR028', 'SP_DESCONOCIDO', 'NO SE ENCONTRÓ RELACION CON EL CLIENTE');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR029', 'SP_DESCONOCIDO', 'El usuario no es un PACIENTE o no existe');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR030', 'SP_DESCONOCIDO', 'NO EXISTE EL MENSAJE O NO PERTENECE AL PACIENTE');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR031', 'SP_DESCONOCIDO', 'El juego no existe o no pertenece al usuario');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR032', 'SP_DESCONOCIDO', 'La pregunta no PERTENECE AL USUARIO');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR033', 'SP_DESCONOCIDO', 'La pregunta no existe');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR034', 'SP_DESCONOCIDO', 'Ya existe una opción marcada como correcta para esta pregunta');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR035', 'SP_DESCONOCIDO', 'Usuario no existe o no es cuidador');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR036', 'SP_DESCONOCIDO', 'Usuario no existe o no es paciente');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR037', 'SP_DESCONOCIDO', 'El paciente no está asignado a este cuidador');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR038', 'SP_DESCONOCIDO', 'El paciente ya tiene asignado este juego');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR039', 'SP_DESCONOCIDO', 'El juego no existe');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR040', 'SP_DESCONOCIDO', 'El JUEGO NO PERTENECE AL USUARIO');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR041', 'SP_DESCONOCIDO', 'No se puede eliminar el juego porque tiene pacientes asignados');
+INSERT INTO BITACORA_ERRORES (CODIGO_ERROR, SP_NOMBRE, DESCRIPCION) VALUES ('ERR042', 'SP_DESCONOCIDO', 'El cuidador no tiene pacientes asignados');
+
+
+
+
+--ejemplo de como manejar los errores.
+ALTER PROCEDURE [dbo].[SP_REGISTRAR_USUARIO]
+    @NOMBRE VARCHAR(100),
+    @CORREO_ELECTRONICO NVARCHAR(255),
+    @CONTRASENA NVARCHAR(255),
+    @FECHA_NACIMIENTO DATE,
+    @FOTO_PERFIL VARBINARY(MAX) = NULL,
+    @DIRECCION VARCHAR(255) = NULL,
+    @ID_TIPO_USUARIO INT,
+    @ID_RETURN INT OUTPUT,
+    @ERROR_CODIGO NVARCHAR(50) OUTPUT -- En lugar de mensaje dinámico, ahora devolvemos un código de error
+AS
+BEGIN
+    DECLARE @EXISTE INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Verificar si el correo ya existe
+        IF EXISTS (SELECT 1 FROM USUARIO WHERE CORREO_ELECTRONICO = @CORREO_ELECTRONICO)
+        BEGIN
+            SET @ID_RETURN = -1;
+            SET @ERROR_CODIGO = 'ERR001'; -- Referencia a la tabla BITACORA_ERRORES
+            RETURN;
+        END
+
+        -- Insertar el nuevo usuario
+        INSERT INTO USUARIO (NOMBRE, CORREO_ELECTRONICO, CONTRASENA, FECHA_NACIMIENTO, FOTO_PERFIL, DIRECCION, ID_TIPO_USUARIO)
+        VALUES (@NOMBRE, @CORREO_ELECTRONICO, @CONTRASENA, @FECHA_NACIMIENTO, @FOTO_PERFIL, @DIRECCION, @ID_TIPO_USUARIO);
+
+        SET @ID_RETURN = SCOPE_IDENTITY();
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+
+        -- Si ocurre un error, devolvemos un código de error general
+        SET @ID_RETURN = -1;
+        SET @ERROR_CODIGO = 'ERR002'; -- Error de base de datos
+    END CATCH
+END;
+GO
+=======
+>>>>>>> 1129d7dfbea952d0552c75be4ace753b480d121d

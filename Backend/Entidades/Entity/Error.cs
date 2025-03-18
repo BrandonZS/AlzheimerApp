@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Backend.Entidades
 {
-    class ResIngresarUsuario
+   public class Error
     {
+        public int idError { get; set; }
+        public string error { get; set; }
+
     }
 }

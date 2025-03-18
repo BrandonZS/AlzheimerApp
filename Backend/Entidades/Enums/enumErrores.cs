@@ -19,6 +19,7 @@ namespace Backend.Entidades
         passwordMuyDebil = 7,
         idFaltante = 8,
         sesionCerrada = 9,
+        fechaInvalida = 10,
         
     }
 }
