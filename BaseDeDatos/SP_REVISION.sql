@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ----------------------------------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE SP_OBTENER_PACIENTES_CUIDADOR
@@ -265,3 +266,5 @@ BEGIN
     END CATCH
 END;
 GO
+=======
+>>>>>>> 1129d7dfbea952d0552c75be4ace753b480d121d
