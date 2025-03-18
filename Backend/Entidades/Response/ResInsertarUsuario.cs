@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Entidades
 {
-    public class ReqIngresarUsuario
+   public  class ResInsertarUsuario : ResBase
     {
-        public Usuario usuario {  get; set; }
     }
 }

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entidades\Entity\Error.cs" />
     <Compile Include="Entidades\Entity\Evento.cs" />
     <Compile Include="Entidades\Entity\Juego.cs" />
     <Compile Include="Entidades\Entity\Mensaje.cs" />
@@ -48,19 +49,24 @@
     <Compile Include="Entidades\Entity\Ping.cs" />
     <Compile Include="Entidades\Entity\Pregunta.cs" />
     <Compile Include="Entidades\Entity\Puntaje.cs" />
+    <Compile Include="Entidades\Entity\Sesion.cs" />
     <Compile Include="Entidades\Entity\Usuario.cs" />
+    <Compile Include="Entidades\Enums\CatalogoErrores.cs" />
     <Compile Include="Entidades\Enums\enumErrores.cs" />
-    <Compile Include="Entidades\Request\ReqIngresarUsuario.cs" />
-    <Compile Include="Entidades\Response\ResIngresarUsuario.cs" />
-    <Compile Include="Logica\Helpers\HelpersValidacion.cs" />
+    <Compile Include="Entidades\Enums\enumEstadoSesion.cs" />
+    <Compile Include="Entidades\Request\ReqBase.cs" />
+    <Compile Include="Entidades\Request\ReqInsertarUsuario.cs" />
+    <Compile Include="Entidades\Response\ResBase.cs" />
+    <Compile Include="Entidades\Response\ResInsertarUsuario.cs" />
     <Compile Include="Logica\Usuario\Sesion\LogUsuario.cs" />
+    <Compile Include="Logica\Usuario\Varios\Validaciones.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logica\Evento\" />
+    <Folder Include="Logica\Helpers\" />
     <Folder Include="Logica\Juego\" />
     <Folder Include="Logica\Mensaje\" />
-    <Folder Include="Logica\Usuario\Varios\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
