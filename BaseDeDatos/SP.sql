@@ -20,9 +20,10 @@ CREATE OR ALTER PROCEDURE SP_INSERTAR_USUARIO
     @FOTO_PERFIL VARBINARY(MAX) = NULL,
     @DIRECCION VARCHAR(255) = NULL,
     @ID_TIPO_USUARIO INT,
-	@ID_RETURN INT OUTPUT,
-	@ERROR_ID INT OUTPUT,
-	@ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+    @ID_RETURN INT OUTPUT,
+    @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     DECLARE @CODIGO VARCHAR(6) = NULL;
@@ -32,85 +33,94 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-		IF EXISTS ( SELECT * FROM [dbo].[USUARIO] WHERE [CORREO_ELECTRONICO] = @CORREO_ELECTRONICO)
+        IF EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CORREO_ELECTRONICO] = @CORREO_ELECTRONICO)
         BEGIN
-		SET @ID_RETURN = -1;
-		SET @ERROR_ID  = 1;
-		SET @ERROR_DESCRIPTION ='Correo existente';
-			
-	     END
-	     ELSE 
-		 BEGIN
-		 -- Si el usuario es paciente (suponiendo que ID_TIPO_USUARIO = 1 es paciente)
-			IF @ID_TIPO_USUARIO = 1
-			BEGIN
-				WHILE 1 = 1
-				BEGIN
-				  SET @EXISTE = 0;
-					-- Generar un código alfanumérico de 6 caracteres
-					SET @CODIGO = LEFT(NEWID(), 6);
-                
-					-- Verificar que el código no exista
-					SELECT @EXISTE = COUNT(*) FROM USUARIO WHERE CODIGO = @CODIGO;
-                
-					-- Si no existe, salir del bucle
-					IF @EXISTE = 0 BREAK;
-				END
-			END
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50001;
 
-        
-			-- Insertar el nuevo usuario
-			INSERT INTO USUARIO (NOMBRE, CORREO_ELECTRONICO, CONTRASENA, FECHA_NACIMIENTO, FOTO_PERFIL, CODIGO, DIRECCION, ID_TIPO_USUARIO)
-			VALUES (@NOMBRE, @CORREO_ELECTRONICO, @CONTRASENA, @FECHA_NACIMIENTO, @FOTO_PERFIL, @CODIGO, @DIRECCION, @ID_TIPO_USUARIO);
-		 END 
+            SET @ID_RETURN = -1;
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF @ID_TIPO_USUARIO = 1
+        BEGIN
+            WHILE 1 = 1
+            BEGIN
+                SET @EXISTE = 0;
+                SET @CODIGO = LEFT(NEWID(), 6);
+                SELECT @EXISTE = COUNT(*) FROM USUARIO WHERE CODIGO = @CODIGO;
+                IF @EXISTE = 0 BREAK;
+            END
+        END
+
+        INSERT INTO USUARIO (NOMBRE, CORREO_ELECTRONICO, CONTRASENA, FECHA_NACIMIENTO, FOTO_PERFIL, CODIGO, DIRECCION, ID_TIPO_USUARIO)
+        VALUES (@NOMBRE, @CORREO_ELECTRONICO, @CONTRASENA, @FECHA_NACIMIENTO, @FOTO_PERFIL, @CODIGO, @DIRECCION, @ID_TIPO_USUARIO);
 
         SET @ID_RETURN = SCOPE_IDENTITY();
 
         COMMIT TRANSACTION;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
-        SET @ID_RETURN = -1;
-		SET @ERROR_ID  = ERROR_NUMBER();
-		SET @ERROR_DESCRIPTION =ERROR_MESSAGE();
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 -- SP002: ACTUALIZAR FOTO DE PERFIL
 CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_FOTO_PERFIL
     @ID_USUARIO INT,
     @FOTO_PERFIL VARBINARY(MAX),
     @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Verificar si el usuario existe
         IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [ID_USUARIO] = @ID_USUARIO)
         BEGIN
-            SET @ERROR_ID = 2;
-            SET @ERROR_DESCRIPTION = 'Usuario no encontrado';
-        END
-        ELSE
-        BEGIN
-            -- Actualizar la foto de perfil
-            UPDATE USUARIO
-            SET FOTO_PERFIL = @FOTO_PERFIL
-            WHERE ID_USUARIO = @ID_USUARIO;
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50002;
+
+            ROLLBACK TRANSACTION;
+            RETURN;
         END
 
+        UPDATE USUARIO
+        SET FOTO_PERFIL = @FOTO_PERFIL
+        WHERE ID_USUARIO = @ID_USUARIO;
+
         COMMIT TRANSACTION;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
         SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 -- SP003: ACTUALIZAR USUARIO 
 CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_USUARIO
@@ -121,6 +131,7 @@ CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_USUARIO
     @PIN VARCHAR(6) = NULL,
     @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
@@ -130,31 +141,36 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Verificar si el usuario existe y obtener su tipo
         SELECT @ID_TIPO_USUARIO = ID_TIPO_USUARIO FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO;
 
         IF @ID_TIPO_USUARIO IS NULL
         BEGIN
-            SET @ERROR_ID = 2;
-            SET @ERROR_DESCRIPTION = 'El usuario no existe';
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50002;
+
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Si es paciente (tipo 1), verificar si tiene un PIN activo
         IF EXISTS(SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [ESTADO] = 1) AND @ID_TIPO_USUARIO = 1 
         BEGIN
-                SELECT @PIN_CORRECTO = COUNT(*) FROM PING WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN AND ESTADO = 1;
-                IF @PIN_CORRECTO = 0
-                BEGIN
-                    SET @ERROR_ID = 4;
-                    SET @ERROR_DESCRIPTION = 'PIN incorrecto.';
-                    ROLLBACK TRANSACTION;
-                    RETURN;
-                END
+            SELECT @PIN_CORRECTO = COUNT(*) FROM PING WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN AND ESTADO = 1;
+            IF @PIN_CORRECTO = 0
+            BEGIN
+                SELECT @ERROR_ID = NUM_ERROR, 
+                       @ERROR_CODE = CODE_ERROR, 
+                       @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+                FROM ERROR_CATALOG 
+                WHERE NUM_ERROR = 50018;
+
+                ROLLBACK TRANSACTION;
+                RETURN;
+            END
         END
 
-        -- Actualizar los datos del usuario
         UPDATE USUARIO
         SET NOMBRE = @NOMBRE,
             FECHA_NACIMIENTO = @FECHA_NACIMIENTO,
@@ -162,16 +178,20 @@ BEGIN
         WHERE ID_USUARIO = @ID_USUARIO;
 
         COMMIT TRANSACTION;
+
         SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
         SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
         SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 -- SP004: ACTUALIZAR CONTRASEÑA
 CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_CONTRASENA
@@ -180,119 +200,144 @@ CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_CONTRASENA
     @NUEVA_CONTRASENA VARCHAR(255),
     @PIN VARCHAR(6) = NULL,
     @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
         DECLARE @PIN_CORRECTO INT;
-		DECLARE @ID_TIPO_USUARIO INT;
 
-		        -- Si el usuario es un paciente (tipo 1), validar el PIN si tiene uno activo
-		IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE @ID_USUARIO = [ID_USUARIO])
-		BEGIN 
-                SET @ERROR_ID = 4;
-                SET @ERROR_DESCRIPTION = 'USUARIO NO EXISTE';
+        IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE @ID_USUARIO = [ID_USUARIO])
+        BEGIN 
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50002;
+
+            ROLLBACK TRANSACTION;
+            RETURN; 
+        END
+
+        IF EXISTS (SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [ESTADO] = 1) 
+        BEGIN
+            SELECT @PIN_CORRECTO = COUNT(*) FROM PING WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN AND ESTADO = 1;
+            IF @PIN_CORRECTO = 0
+            BEGIN
+                SELECT @ERROR_ID = NUM_ERROR, 
+                       @ERROR_CODE = CODE_ERROR, 
+                       @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+                FROM ERROR_CATALOG 
+                WHERE NUM_ERROR = 50018;
+
                 ROLLBACK TRANSACTION;
-                RETURN; 
-		END
-		ELSE
-		BEGIN
-			 IF EXISTS(SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [ESTADO] = 1) 
-			 BEGIN
-                SELECT @PIN_CORRECTO = COUNT(*) FROM PING WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN AND ESTADO = 1;
-                IF @PIN_CORRECTO = 0
-                BEGIN
-                    SET @ERROR_ID = 4;
-                    SET @ERROR_DESCRIPTION = 'PIN incorrecto.';
-                    ROLLBACK TRANSACTION;
-                    RETURN;
-                END
-			 END
-		END
+                RETURN;
+            END
+        END
 
-        -- Validar que la contraseña actual sea correcta
-		IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CONTRASENA] = @CONTRASENA_ACTUAL AND [ID_USUARIO]= @ID_USUARIO)
+        IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CONTRASENA] = @CONTRASENA_ACTUAL AND [ID_USUARIO] = @ID_USUARIO)
         BEGIN
-            SET @ERROR_ID = 2;
-            SET @ERROR_DESCRIPTION = 'La contraseña actual es incorrecta';
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50019;
+
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Validar que la nueva contraseña no sea igual a la actual
-        IF EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CONTRASENA] = @NUEVA_CONTRASENA AND [ID_USUARIO]= @ID_USUARIO)
+        IF EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [CONTRASENA] = @NUEVA_CONTRASENA AND [ID_USUARIO] = @ID_USUARIO)
         BEGIN
-            SET @ERROR_ID = 3;
-            SET @ERROR_DESCRIPTION = 'La nueva contraseña no puede ser igual a la actual';
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50020;
+
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-
-
-        -- Actualizar la contraseña
         UPDATE USUARIO
         SET CONTRASENA = @NUEVA_CONTRASENA
         WHERE ID_USUARIO = @ID_USUARIO;
 
         COMMIT TRANSACTION;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
         SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
 
+
 -- SP005: ELIMINAR FOTO DE PERFIL (VERIFICA PING EN CASO DE SER REQUERIDO)
 CREATE OR ALTER PROCEDURE SP_ELIMINAR_FOTO_PERFIL
     @ID_USUARIO INT,
-    @CODIGO_PING VARCHAR(6) = NULL, -- Opcional, solo requerido si hay un ping activo
+    @CODIGO_PING VARCHAR(6) = NULL,
     @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        DECLARE @ES_PACIENTE BIT;
-        DECLARE @PING_ACTIVO BIT = 0;
-
-        -- Verificar si el usuario existe y obtener su tipo
         IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO)
         BEGIN
-            SET @ERROR_ID = 1;
-            SET @ERROR_DESCRIPTION = 'El usuario no existe.';
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50002;
+
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-		IF EXISTS (SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [ESTADO] = 1)
-		BEGIN
-			IF NOT EXISTS (SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [CODIGO] = @CODIGO_PING)
-			BEGIN
-				SET @ERROR_ID = 2;
-                SET @ERROR_DESCRIPTION = 'PIN incorrecto.';
+        IF EXISTS (SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [ESTADO] = 1)
+        BEGIN
+            IF NOT EXISTS (SELECT 1 FROM [dbo].[PING] WHERE [ID_USUARIO] = @ID_USUARIO AND [CODIGO] = @CODIGO_PING)
+            BEGIN
+                SELECT @ERROR_ID = NUM_ERROR, 
+                       @ERROR_CODE = CODE_ERROR, 
+                       @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+                FROM ERROR_CATALOG 
+                WHERE NUM_ERROR = 50018;
+
                 ROLLBACK TRANSACTION;
                 RETURN;
-			END
-		END
+            END
+        END
 
-        -- Eliminar la foto de perfil
         UPDATE USUARIO
         SET FOTO_PERFIL = NULL
         WHERE ID_USUARIO = @ID_USUARIO;
+
         COMMIT TRANSACTION;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
         SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 
 -- MODULO 2: PING
@@ -304,67 +349,72 @@ CREATE OR ALTER PROCEDURE SP_INSERTAR_PING
     @CODIGO VARCHAR(6),
     @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
         
-        -- Verificar que el usuario exista y sea de tipo paciente (ID_TIPO_USUARIO = 1)
         IF NOT EXISTS (SELECT 1 FROM [dbo].[USUARIO] WHERE [ID_USUARIO] = @ID_USUARIO AND ID_TIPO_USUARIO = 1)
         BEGIN
-            SET @ID_RETURN = -1;
-            SET @ERROR_ID = 3;
-            SET @ERROR_DESCRIPTION = 'El usuario no existe o no es un paciente';
-            ROLLBACK TRANSACTION;
-            RETURN;
-        END
-                -- Verificar si el usuario ya tiene un PING activo
-        IF EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND ESTADO = 1)
-        BEGIN
-            SET @ID_RETURN = -1;
-            SET @ERROR_ID = 5;
-            SET @ERROR_DESCRIPTION = 'El usuario ya tiene un PIN activo';
-            ROLLBACK TRANSACTION;
-            RETURN;
-        END
-        
-                -- Verificar si el usuario ya tiene un PING activo
-        IF EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND ESTADO = 1)
-        BEGIN
-            SET @ID_RETURN = -1;
-            SET @ERROR_ID = 5;
-            SET @ERROR_DESCRIPTION = 'El usuario ya tiene un PIN activo';
-            ROLLBACK TRANSACTION;
-            RETURN;
-        END
-        
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50002;
 
-        -- Verificar que el código no sea nulo
+            SET @ID_RETURN = -1;
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND ESTADO = 1)
+        BEGIN
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50007;
+
+            SET @ID_RETURN = -1;
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
         IF @CODIGO IS NULL OR LEN(@CODIGO) <> 6 OR @CODIGO LIKE '%[^0-9]%'
         BEGIN
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50017;
+
             SET @ID_RETURN = -1;
-            SET @ERROR_ID = 4;
-            SET @ERROR_DESCRIPTION = 'El PIN debe contener exactamente 6 dígitos numéricos';
             ROLLBACK TRANSACTION;
             RETURN;
         END
         
-        -- Insertar el nuevo ping
         INSERT INTO PING (CODIGO, FECHA, ESTADO, ID_USUARIO)
         VALUES (@CODIGO, GETDATE(), 1, @ID_USUARIO);
         
         SET @ID_RETURN = SCOPE_IDENTITY();
         COMMIT TRANSACTION;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
         SET @ID_RETURN = -1;
         SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 -- SP007: ACTUALIZAR PING (USUARIO PACIENTE)
 CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_PING
@@ -373,102 +423,131 @@ CREATE OR ALTER PROCEDURE SP_ACTUALIZAR_PING
     @NUEVO_CODIGO VARCHAR(6),
     @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
-        IF NOT EXISTS(SELECT 1 FROM [dbo].[PING]  WHERE ID_USUARIO = @ID_USUARIO  AND CODIGO = @PIN_ACTUAL AND ESTADO = 1)
+
+        IF NOT EXISTS(SELECT 1 FROM [dbo].[PING] WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN_ACTUAL AND ESTADO = 1)
         BEGIN
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50018;
+
             SET @ID_RETURN = -1;
-            SET @ERROR_ID = 2;
-            SET @ERROR_DESCRIPTION = 'El PIN actual es incorrecto o no existe';
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Validar que el nuevo código tenga 6 dígitos numéricos
         IF @NUEVO_CODIGO IS NULL OR LEN(@NUEVO_CODIGO) <> 6 OR @NUEVO_CODIGO LIKE '%[^0-9]%'
         BEGIN
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50017;
+
             SET @ID_RETURN = -1;
-            SET @ERROR_ID = 3;
-            SET @ERROR_DESCRIPTION = 'El nuevo PIN debe contener exactamente 6 dígitos numéricos';
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Actualizar el PIN activo
         UPDATE PING 
         SET ESTADO = 0
         WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @PIN_ACTUAL AND ESTADO = 1;
 
-		INSERT INTO PING(CODIGO,FECHA,ESTADO,ID_USUARIO)
-			VALUES(@NUEVO_CODIGO,GETDATE(),1,@ID_USUARIO)
+        INSERT INTO PING (CODIGO, FECHA, ESTADO, ID_USUARIO)
+        VALUES (@NUEVO_CODIGO, GETDATE(), 1, @ID_USUARIO);
 
-		SET @ID_RETURN = SCOPE_IDENTITY();
-
+        SET @ID_RETURN = SCOPE_IDENTITY();
         COMMIT TRANSACTION;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
         SET @ID_RETURN = -1;
         SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 -- SP008: ELIMINAR PING (CAMBIAR ESTADO A FALSE/0)
 CREATE OR ALTER PROCEDURE SP_ELIMINAR_PING
     @ID_USUARIO INT,
     @CODIGO_PING VARCHAR(6),
     @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Verificar si el usuario existe
         IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO)
         BEGIN
-            SET @ERROR_ID = 1;
-            SET @ERROR_DESCRIPTION = 'El usuario no existe.';
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50002;
+
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Verificar si el usuario tiene un PING activo
         IF NOT EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND ESTADO = 1)
         BEGIN
-            SET @ERROR_ID = 2;
-            SET @ERROR_DESCRIPTION = 'No hay un PING activo para este usuario.';
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50016;
+
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Validar que el PIN proporcionado sea correcto
         IF NOT EXISTS (SELECT 1 FROM PING WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @CODIGO_PING AND ESTADO = 1)
         BEGIN
-            SET @ERROR_ID = 3;
-            SET @ERROR_DESCRIPTION = 'El PIN proporcionado es incorrecto.';
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50018;
+
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Cambiar el estado del PING a 0 (desactivado)
         UPDATE PING
         SET ESTADO = 0
         WHERE ID_USUARIO = @ID_USUARIO AND CODIGO = @CODIGO_PING AND ESTADO = 1;
+
         COMMIT TRANSACTION;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
         SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 -- MODULO 3: RELACIONES
 
@@ -479,6 +558,7 @@ CREATE OR ALTER PROCEDURE SP_INSERTAR_RELACION
     @CODIGO_PACIENTE VARCHAR(6),
     @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
+    @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
@@ -487,54 +567,67 @@ BEGIN
 
         DECLARE @ID_USUARIO_PACIENTE INT;
 
-        -- Buscar el ID del paciente usando el código alfanumérico
         SELECT @ID_USUARIO_PACIENTE = ID_USUARIO FROM USUARIO WHERE CODIGO = @CODIGO_PACIENTE AND ID_TIPO_USUARIO = 1;
 
-        -- Validar que el paciente exista
         IF @ID_USUARIO_PACIENTE IS NULL
         BEGIN
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50009;
+
             SET @ID_RETURN = -1;
-            SET @ERROR_ID = 1;
-            SET @ERROR_DESCRIPTION = 'El código del paciente es incorrecto o no existe.';
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Validar que el cuidador exista
         IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_USUARIO_CUIDADOR AND ID_TIPO_USUARIO = 2)
         BEGIN
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50004;
+
             SET @ID_RETURN = -1;
-            SET @ERROR_ID = 2;
-            SET @ERROR_DESCRIPTION = 'El ID del cuidador no es válido.';
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Verificar si la relación ya existe
-        IF EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_PACIENTE = @ID_USUARIO_PACIENTE AND ID_USUARIO_CUIDADOR = @ID_USUARIO_CUIDADOR AND FEC_FIN = NULL )
+        IF EXISTS (SELECT 1 FROM CUIDADOR_PACIENTE WHERE ID_USUARIO_PACIENTE = @ID_USUARIO_PACIENTE AND ID_USUARIO_CUIDADOR = @ID_USUARIO_CUIDADOR AND FEC_FIN IS NULL)
         BEGIN
+            SELECT @ERROR_ID = NUM_ERROR, 
+                   @ERROR_CODE = CODE_ERROR, 
+                   @ERROR_DESCRIPTION = DESCRIPTION_ERROR
+            FROM ERROR_CATALOG 
+            WHERE NUM_ERROR = 50011;
+
             SET @ID_RETURN = -1;
-            SET @ERROR_ID = 3;
-            SET @ERROR_DESCRIPTION = 'La relación entre paciente y cuidador ya existe.';
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Insertar la relación en la tabla CUIDADOR_PACIENTE
         INSERT INTO CUIDADOR_PACIENTE (ID_USUARIO_CUIDADOR, ID_USUARIO_PACIENTE, FEC_INICIO)
         VALUES (@ID_USUARIO_CUIDADOR, @ID_USUARIO_PACIENTE, GETDATE());
 
         SET @ID_RETURN = SCOPE_IDENTITY();
         COMMIT TRANSACTION;
+
+        SET @ERROR_ID = NULL;
+        SET @ERROR_CODE = NULL;
+        SET @ERROR_DESCRIPTION = NULL;
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
         SET @ID_RETURN = -1;
         SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 -- SP:010: OBTENER RELACION (CUIDADOR PACIENTE)
 CREATE OR ALTER PROCEDURE SP_OBTENER_RELACION
