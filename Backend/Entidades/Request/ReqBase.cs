@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Backend.Entidades.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

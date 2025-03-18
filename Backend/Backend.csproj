@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,7 +53,6 @@
     <Compile Include="Entidades\Entity\Sesion.cs" />
     <Compile Include="Entidades\Entity\Usuario.cs" />
     <Compile Include="Entidades\Enums\CatalogoErrores.cs" />
-    <Compile Include="Entidades\Enums\enumErrores.cs" />
     <Compile Include="Entidades\Enums\enumEstadoSesion.cs" />
     <Compile Include="Entidades\Request\ReqBase.cs" />
     <Compile Include="Entidades\Request\ReqInsertarUsuario.cs" />
@@ -67,6 +67,12 @@
     <Folder Include="Logica\Helpers\" />
     <Folder Include="Logica\Juego\" />
     <Folder Include="Logica\Mensaje\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">
+      <Project>{5d711d3b-a9d7-4aa2-a1f3-a123ab47f9b7}</Project>
+      <Name>AccesoDatos</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

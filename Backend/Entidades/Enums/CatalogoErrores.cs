@@ -27,5 +27,10 @@ namespace Backend.Entidades
         correoElectronicoRepetido = 16,
         usuarioInactivo = 17,
         usuarioVerficado = 18,
+
+        correoIncorrecto = 19,
+        passwordFaltante = 20,
+        passwordMuyDebil = 21,
+        fechaInvalida = 22,
     }
 }
