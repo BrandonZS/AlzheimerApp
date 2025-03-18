@@ -579,7 +579,7 @@ END;
 GO
 
 -- SP011: ELIMINAR RELACION (CUIDADOR PACIENTE)
-CREATE OR ALTER PROCEDURE SP_TERMINAR_RELACION
+CREATE OR ALTER PROCEDURE SP_ELIMINAR_RELACION
     @ID_USUARIO_CUIDADOR INT,
     @ID_USUARIO_PACIENTE INT,
     @CODIGO_PING VARCHAR(6) = NULL, -- Opcional, solo requerido si el paciente termina la relación
@@ -1470,6 +1470,41 @@ BEGIN
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
+        SET @ERROR_ID = ERROR_NUMBER();
+        SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+
+-- SP030: OBTENER PUNTAJE (ULTIMOS 20 JUEGOS)
+CREATE OR ALTER PROCEDURE SP_OBTENER_PUNTAJE
+    @ID_PACIENTE INT,
+	@ERROR_ID INT OUTPUT,
+    @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
+AS
+BEGIN
+    BEGIN TRY
+        -- Verificar que el paciente exista 
+        IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE ID_USUARIO = @ID_PACIENTE AND ID_TIPO_USUARIO = 1)
+        BEGIN
+            SET @ERROR_ID = ERROR_NUMBER();
+            SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
+            RETURN;
+        END
+
+        -- Obtener los últimos 20 juegos jugados por el paciente con sus puntajes individuales
+        SELECT TOP 20
+            P.ID_PUNTAJE,  -- Identificador del puntaje
+            P.ID_JUEGO,     -- Identificador del juego
+            J.NOMBRE AS NOMBRE_JUEGO, -- Nombre del juego
+            P.PUNTAJE,      -- Puntaje obtenido en ese intento
+            P.FECHA_HORA    -- Fecha y hora del intento
+        FROM PUNTAJE P
+        INNER JOIN JUEGO J ON P.ID_JUEGO = J.ID_JUEGO
+        WHERE P.ID_USUARIO = @ID_PACIENTE
+        ORDER BY P.FECHA_HORA DESC; -- Ordenado por la fecha más reciente
+    END TRY
+    BEGIN CATCH
         SET @ERROR_ID = ERROR_NUMBER();
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
