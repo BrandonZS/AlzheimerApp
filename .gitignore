@@ -398,3 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+API/API.csproj
+Acceso de Datos/Acceso de Datos.csproj
+API/Web.config
