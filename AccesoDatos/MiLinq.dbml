@@ -13,6 +13,7 @@
   <Function Name="dbo.SP_OBTENER_PUNTAJE" Method="SP_OBTENER_PUNTAJE">
     <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_OBTENER_PUNTAJEResult">
       <Column Name="ID_PUNTAJE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -26,6 +27,7 @@
     <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_MENSAJE" Parameter="iD_MENSAJE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -37,6 +39,7 @@
     <Parameter Name="FECHA_HORA" Parameter="fECHA_HORA" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="ID_PRIORIDAD" Parameter="iD_PRIORIDAD" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -75,6 +78,7 @@
     <Parameter Name="ORIGEN" Parameter="oRIGEN" Type="System.String" DbType="NVarChar(MAX)" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -82,6 +86,7 @@
     <Parameter Name="TOKEN" Parameter="tOKEN" Type="System.String" DbType="NVarChar(MAX)" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_CONSULTAR_SESIONResult">
       <Column Name="ID_USUARIO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -95,6 +100,7 @@
     <Parameter Name="ID_EVENTO" Parameter="iD_EVENTO" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_CUIDADOR" Parameter="iD_CUIDADOR" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -110,6 +116,7 @@
     <Parameter Name="ID_JUEGO" Parameter="iD_JUEGO" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_CUIDADOR" Parameter="iD_CUIDADOR" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -118,6 +125,7 @@
     <Parameter Name="ID_CUIDADOR" Parameter="iD_CUIDADOR" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -134,6 +142,7 @@
     <Parameter Name="ID_USUARIO_PACIENTE" Parameter="iD_USUARIO_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="CODIGO_PING" Parameter="cODIGO_PING" Type="System.String" DbType="VarChar(6)" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -145,6 +154,7 @@
     <Parameter Name="ID_PRIORIDAD" Parameter="iD_PRIORIDAD" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -153,6 +163,7 @@
     <Parameter Name="NOMBRE" Parameter="nOMBRE" Type="System.String" DbType="VarChar(255)" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -162,6 +173,7 @@
     <Parameter Name="CONTENIDO" Parameter="cONTENIDO" Type="System.String" DbType="VarChar(255)" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -172,6 +184,7 @@
     <Parameter Name="CONDICION" Parameter="cONDICION" Type="System.Boolean" DbType="Bit" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -181,6 +194,7 @@
     <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -190,6 +204,7 @@
     <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -212,6 +227,7 @@
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ID_RETURN_2" Parameter="iD_RETURN_2" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
@@ -230,6 +246,7 @@
     <Parameter Name="ORIGEN" Parameter="oRIGEN" Type="System.String" DbType="NVarChar(MAX)" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_INSERTAR_SESIONResult">
       <Column Name="ID_USUARIO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -254,6 +271,9 @@
   </Function>
   <Function Name="dbo.SP_OBTENER_EVENTOS_CUIDADOR" Method="SP_OBTENER_EVENTOS_CUIDADOR">
     <Parameter Name="ID_CUIDADOR" Parameter="iD_CUIDADOR" Type="System.Int32" DbType="Int" />
+    <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
+    <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_OBTENER_EVENTOS_CUIDADORResult">
       <Column Name="ID_EVENTO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="TITULO" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
@@ -268,6 +288,7 @@
     <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_OBTENER_EVENTOS_PACIENTEResult">
       <Column Name="ID_EVENTO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -283,6 +304,7 @@
   <Function Name="dbo.SP_OBTENER_JUEGOS_CREADOS" Method="SP_OBTENER_JUEGOS_CREADOS">
     <Parameter Name="ID_CUIDADOR" Parameter="iD_CUIDADOR" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_OBTENER_JUEGOS_CREADOSResult">
       <Column Name="ID_JUEGO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -293,6 +315,7 @@
   <Function Name="dbo.SP_OBTENER_JUEGOS_DISPONIBLES" Method="SP_OBTENER_JUEGOS_DISPONIBLES">
     <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_OBTENER_JUEGOS_DISPONIBLESResult">
       <Column Name="ID_JUEGO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -303,6 +326,7 @@
   <Function Name="dbo.SP_OBTENER_MENSAJES" Method="SP_OBTENER_MENSAJES">
     <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_OBTENER_MENSAJESResult">
       <Column Name="ID_MENSAJE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -316,6 +340,7 @@
   <Function Name="dbo.SP_OBTENER_PREGUNTAS" Method="SP_OBTENER_PREGUNTAS">
     <Parameter Name="ID_JUEGO" Parameter="iD_JUEGO" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_OBTENER_PREGUNTASResult">
       <Column Name="ID_PREGUNTA" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -327,6 +352,7 @@
   <Function Name="dbo.SP_OBTENER_RELACION" Method="SP_OBTENER_RELACION">
     <Parameter Name="ID_CUIDADOR" Parameter="iD_CUIDADOR" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <ElementType Name="SP_OBTENER_RELACIONResult">
       <Column Name="ID_PACIENTE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />

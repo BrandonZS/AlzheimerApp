@@ -73,29 +73,32 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_PUNTAJE")]
-		public ISingleResult<SP_OBTENER_PUNTAJEResult> SP_OBTENER_PUNTAJE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_OBTENER_PUNTAJEResult> SP_OBTENER_PUNTAJE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(2)));
+			eRROR_CODE = ((string)(result.GetParameterValue(2)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_PUNTAJEResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_MENSAJES")]
-		public int SP_ACTUALIZAR_ESTADO_MENSAJES([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_MENSAJE", DbType="Int")] System.Nullable<int> iD_MENSAJE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_ACTUALIZAR_ESTADO_MENSAJES([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_MENSAJE", DbType="Int")] System.Nullable<int> iD_MENSAJE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, iD_MENSAJE, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, iD_MENSAJE, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(2)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
+			eRROR_CODE = ((string)(result.GetParameterValue(3)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_EVENTO")]
-		public int SP_ACTUALIZAR_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_EVENTO", DbType="Int")] System.Nullable<int> iD_EVENTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(255)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FECHA_HORA", DbType="DateTime")] System.Nullable<System.DateTime> fECHA_HORA, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PRIORIDAD", DbType="Int")] System.Nullable<int> iD_PRIORIDAD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_ACTUALIZAR_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_EVENTO", DbType="Int")] System.Nullable<int> iD_EVENTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(255)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FECHA_HORA", DbType="DateTime")] System.Nullable<System.DateTime> fECHA_HORA, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PRIORIDAD", DbType="Int")] System.Nullable<int> iD_PRIORIDAD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_EVENTO, iD_CUIDADOR, tITULO, dESCRIPCION, fECHA_HORA, iD_PRIORIDAD, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_EVENTO, iD_CUIDADOR, tITULO, dESCRIPCION, fECHA_HORA, iD_PRIORIDAD, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(6)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(7)));
+			eRROR_CODE = ((string)(result.GetParameterValue(7)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(8)));
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -132,31 +135,34 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CERRAR_SESION")]
-		public int SP_CERRAR_SESION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ORIGEN", DbType="NVarChar(MAX)")] string oRIGEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_CERRAR_SESION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ORIGEN", DbType="NVarChar(MAX)")] string oRIGEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_USUARIO, oRIGEN, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_USUARIO, oRIGEN, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(2)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(3)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
+			eRROR_CODE = ((string)(result.GetParameterValue(4)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
 			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CONSULTAR_SESION")]
-		public ISingleResult<SP_CONSULTAR_SESIONResult> SP_CONSULTAR_SESION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="TOKEN", DbType="NVarChar(MAX)")] string tOKEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_CONSULTAR_SESIONResult> SP_CONSULTAR_SESION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="TOKEN", DbType="NVarChar(MAX)")] string tOKEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), tOKEN, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), tOKEN, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(1)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(2)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
+			eRROR_CODE = ((string)(result.GetParameterValue(3)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
 			return ((ISingleResult<SP_CONSULTAR_SESIONResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ELIMINAR_EVENTO")]
-		public int SP_ELIMINAR_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_EVENTO", DbType="Int")] System.Nullable<int> iD_EVENTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_ELIMINAR_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_EVENTO", DbType="Int")] System.Nullable<int> iD_EVENTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_EVENTO, iD_CUIDADOR, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_EVENTO, iD_CUIDADOR, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(2)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
+			eRROR_CODE = ((string)(result.GetParameterValue(3)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -171,20 +177,22 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ELIMINAR_JUEGO")]
-		public int SP_ELIMINAR_JUEGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_ELIMINAR_JUEGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, iD_CUIDADOR, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, iD_CUIDADOR, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(2)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
+			eRROR_CODE = ((string)(result.GetParameterValue(3)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ELIMINAR_PACIENTE_EVENTO")]
-		public int SP_ELIMINAR_PACIENTE_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_EVENTO", DbType="Int")] System.Nullable<int> iD_EVENTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_ELIMINAR_PACIENTE_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_EVENTO", DbType="Int")] System.Nullable<int> iD_EVENTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_EVENTO, iD_CUIDADOR, iD_PACIENTE, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_EVENTO, iD_CUIDADOR, iD_PACIENTE, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(3)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
+			eRROR_CODE = ((string)(result.GetParameterValue(4)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -199,71 +207,78 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ELIMINAR_RELACION")]
-		public int SP_ELIMINAR_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO_CUIDADOR", DbType="Int")] System.Nullable<int> iD_USUARIO_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO_PACIENTE", DbType="Int")] System.Nullable<int> iD_USUARIO_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CODIGO_PING", DbType="VarChar(6)")] string cODIGO_PING, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_ELIMINAR_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO_CUIDADOR", DbType="Int")] System.Nullable<int> iD_USUARIO_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO_PACIENTE", DbType="Int")] System.Nullable<int> iD_USUARIO_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CODIGO_PING", DbType="VarChar(6)")] string cODIGO_PING, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_USUARIO_CUIDADOR, iD_USUARIO_PACIENTE, cODIGO_PING, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_USUARIO_CUIDADOR, iD_USUARIO_PACIENTE, cODIGO_PING, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(3)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
+			eRROR_CODE = ((string)(result.GetParameterValue(4)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
 			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_EVENTO")]
-		public int SP_INSERTAR_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(255)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FECHA_HORA", DbType="DateTime")] System.Nullable<System.DateTime> fECHA_HORA, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PRIORIDAD", DbType="Int")] System.Nullable<int> iD_PRIORIDAD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_INSERTAR_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(255)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FECHA_HORA", DbType="DateTime")] System.Nullable<System.DateTime> fECHA_HORA, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PRIORIDAD", DbType="Int")] System.Nullable<int> iD_PRIORIDAD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, tITULO, dESCRIPCION, fECHA_HORA, iD_PRIORIDAD, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, tITULO, dESCRIPCION, fECHA_HORA, iD_PRIORIDAD, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(5)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(6)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(7)));
+			eRROR_CODE = ((string)(result.GetParameterValue(7)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(8)));
 			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_JUEGO")]
-		public int SP_INSERTAR_JUEGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NOMBRE", DbType="VarChar(255)")] string nOMBRE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_INSERTAR_JUEGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NOMBRE", DbType="VarChar(255)")] string nOMBRE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, nOMBRE, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, nOMBRE, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(2)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(3)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
+			eRROR_CODE = ((string)(result.GetParameterValue(4)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
 			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_MENSAJE")]
-		public int SP_INSERTAR_MENSAJE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CONTENIDO", DbType="VarChar(255)")] string cONTENIDO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_INSERTAR_MENSAJE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CONTENIDO", DbType="VarChar(255)")] string cONTENIDO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, iD_PACIENTE, cONTENIDO, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, iD_PACIENTE, cONTENIDO, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
-			return ((int)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_OPCION")]
-		public int SP_INSERTAR_OPCION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PREGUNTA", DbType="Int")] System.Nullable<int> iD_PREGUNTA, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(255)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CONDICION", DbType="Bit")] System.Nullable<bool> cONDICION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PREGUNTA, iD_CUIDADOR, dESCRIPCION, cONDICION, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
-			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(5)));
+			eRROR_CODE = ((string)(result.GetParameterValue(5)));
 			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(6)));
 			return ((int)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_PACIENTE_EVENTO")]
-		public int SP_INSERTAR_PACIENTE_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_EVENTO", DbType="Int")] System.Nullable<int> iD_EVENTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_OPCION")]
+		public int SP_INSERTAR_OPCION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PREGUNTA", DbType="Int")] System.Nullable<int> iD_PREGUNTA, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(255)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CONDICION", DbType="Bit")] System.Nullable<bool> cONDICION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_EVENTO, iD_CUIDADOR, iD_PACIENTE, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PREGUNTA, iD_CUIDADOR, dESCRIPCION, cONDICION, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(5)));
+			eRROR_CODE = ((string)(result.GetParameterValue(6)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(7)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_PACIENTE_EVENTO")]
+		public int SP_INSERTAR_PACIENTE_EVENTO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_EVENTO", DbType="Int")] System.Nullable<int> iD_EVENTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_EVENTO, iD_CUIDADOR, iD_PACIENTE, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
+			eRROR_CODE = ((string)(result.GetParameterValue(5)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(6)));
 			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_PACIENTE_JUEGO")]
-		public int SP_INSERTAR_PACIENTE_JUEGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_INSERTAR_PACIENTE_JUEGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, iD_CUIDADOR, iD_PACIENTE, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, iD_CUIDADOR, iD_PACIENTE, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
+			eRROR_CODE = ((string)(result.GetParameterValue(5)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(6)));
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -279,13 +294,14 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_PREGUNTA")]
-		public int SP_INSERTAR_PREGUNTA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(MAX)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BINARIO_FOTO", DbType="VarBinary(MAX)")] System.Data.Linq.Binary bINARIO_FOTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO_IMAGEN", DbType="VarChar(255)")] string tITULO_IMAGEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN_2", DbType="Int")] ref System.Nullable<int> iD_RETURN_2, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_INSERTAR_PREGUNTA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(MAX)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BINARIO_FOTO", DbType="VarBinary(MAX)")] System.Data.Linq.Binary bINARIO_FOTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO_IMAGEN", DbType="VarChar(255)")] string tITULO_IMAGEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN_2", DbType="Int")] ref System.Nullable<int> iD_RETURN_2, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, tITULO, dESCRIPCION, bINARIO_FOTO, tITULO_IMAGEN, iD_USUARIO, iD_RETURN, iD_RETURN_2, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, tITULO, dESCRIPCION, bINARIO_FOTO, tITULO_IMAGEN, iD_USUARIO, iD_RETURN, iD_RETURN_2, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(6)));
 			iD_RETURN_2 = ((System.Nullable<int>)(result.GetParameterValue(7)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(8)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(9)));
+			eRROR_CODE = ((string)(result.GetParameterValue(9)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(10)));
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -301,12 +317,13 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_SESION")]
-		public ISingleResult<SP_INSERTAR_SESIONResult> SP_INSERTAR_SESION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CORREO_ELECTRONICO", DbType="NVarChar(50)")] string cORREO_ELECTRONICO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PASSWORD", DbType="NVarChar(MAX)")] string pASSWORD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ORIGEN", DbType="NVarChar(MAX)")] string oRIGEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_INSERTAR_SESIONResult> SP_INSERTAR_SESION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CORREO_ELECTRONICO", DbType="NVarChar(50)")] string cORREO_ELECTRONICO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PASSWORD", DbType="NVarChar(MAX)")] string pASSWORD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ORIGEN", DbType="NVarChar(MAX)")] string oRIGEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), cORREO_ELECTRONICO, pASSWORD, oRIGEN, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), cORREO_ELECTRONICO, pASSWORD, oRIGEN, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
+			eRROR_CODE = ((string)(result.GetParameterValue(5)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(6)));
 			return ((ISingleResult<SP_INSERTAR_SESIONResult>)(result.ReturnValue));
 		}
 		
@@ -322,64 +339,73 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_EVENTOS_CUIDADOR")]
-		public ISingleResult<SP_OBTENER_EVENTOS_CUIDADORResult> SP_OBTENER_EVENTOS_CUIDADOR([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR)
+		public ISingleResult<SP_OBTENER_EVENTOS_CUIDADORResult> SP_OBTENER_EVENTOS_CUIDADOR([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
+			eRROR_CODE = ((string)(result.GetParameterValue(2)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_EVENTOS_CUIDADORResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_EVENTOS_PACIENTE")]
-		public ISingleResult<SP_OBTENER_EVENTOS_PACIENTEResult> SP_OBTENER_EVENTOS_PACIENTE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_OBTENER_EVENTOS_PACIENTEResult> SP_OBTENER_EVENTOS_PACIENTE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, iD_RETURN, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(1)));
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(2)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
+			eRROR_CODE = ((string)(result.GetParameterValue(3)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
 			return ((ISingleResult<SP_OBTENER_EVENTOS_PACIENTEResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_JUEGOS_CREADOS")]
-		public ISingleResult<SP_OBTENER_JUEGOS_CREADOSResult> SP_OBTENER_JUEGOS_CREADOS([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_OBTENER_JUEGOS_CREADOSResult> SP_OBTENER_JUEGOS_CREADOS([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(2)));
+			eRROR_CODE = ((string)(result.GetParameterValue(2)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_JUEGOS_CREADOSResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_JUEGOS_DISPONIBLES")]
-		public ISingleResult<SP_OBTENER_JUEGOS_DISPONIBLESResult> SP_OBTENER_JUEGOS_DISPONIBLES([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_OBTENER_JUEGOS_DISPONIBLESResult> SP_OBTENER_JUEGOS_DISPONIBLES([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(2)));
+			eRROR_CODE = ((string)(result.GetParameterValue(2)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_JUEGOS_DISPONIBLESResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_MENSAJES")]
-		public ISingleResult<SP_OBTENER_MENSAJESResult> SP_OBTENER_MENSAJES([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_OBTENER_MENSAJESResult> SP_OBTENER_MENSAJES([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(2)));
+			eRROR_CODE = ((string)(result.GetParameterValue(2)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_MENSAJESResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_PREGUNTAS")]
-		public ISingleResult<SP_OBTENER_PREGUNTASResult> SP_OBTENER_PREGUNTAS([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_OBTENER_PREGUNTASResult> SP_OBTENER_PREGUNTAS([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(2)));
+			eRROR_CODE = ((string)(result.GetParameterValue(2)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_PREGUNTASResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_RELACION")]
-		public ISingleResult<SP_OBTENER_RELACIONResult> SP_OBTENER_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_OBTENER_RELACIONResult> SP_OBTENER_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, eRROR_ID, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(2)));
+			eRROR_CODE = ((string)(result.GetParameterValue(2)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_RELACIONResult>)(result.ReturnValue));
 		}
 	}
