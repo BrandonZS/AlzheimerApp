@@ -185,15 +185,15 @@ namespace Backend.Logica
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
                         // Ejecutar el Stored Procedure SP_CERRAR_SESION
-                        linq.SP_CERRAR_SESION( req.IdUsuario, req.Origen, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
+                        var resultado = linq.SP_CERRAR_SESION( req.IdUsuario, req.Origen, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
                     }
 
-                    // Si no hubo errores, se cierra la sesión correctamente
-                    if (idReturn == null || idReturn <0  )
+                    // ✅ Manejo seguro de `idReturn` y `errorId`
+                    if (idReturn != null && idReturn == 0)
                     {
                         res.resultado = true;
                     }
-                    else // Manejar errores del SP
+                    else // Si no se insertó, manejar el error devuelto por el SP
                     {
                         res.resultado = false;
                         res.listaDeErrores.Add(new Error
@@ -216,7 +216,7 @@ namespace Backend.Logica
         }
 
 
-        //revisar esta logica 
+        //Funciona
         public ResActualizarUsuario actualizarUsuario(ReqActualizarUsuario req)
         {
             ResActualizarUsuario res = new ResActualizarUsuario();
@@ -224,28 +224,27 @@ namespace Backend.Logica
 
             try
             {
-                // Validar los datos de la solicitud
                 res.listaDeErrores = Validaciones.validarActualizarUsuario(req);
 
-                if (!res.listaDeErrores.Any()) // Si no hay errores, proceder con la actualización
+                if (!res.listaDeErrores.Any()) 
                 {
-                    int? idReturn = 0;  
-                    int? errorId = 0;   
-                    string errorCode = "";  
-                    string errorDescrip = ""; 
+                    //CERO errores ¡Todo bien!
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
 
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        // Ejecutar el Stored Procedure SP_ACTUALIZAR_USUARIO
-                        linq.SP_ACTUALIZAR_USUARIO( req.IdUsuario,req.Nombre, req.FechaNacimiento,req.Direccion, req.Pin,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                        var resultado = linq.SP_ACTUALIZAR_USUARIO( req.IdUsuario,req.Nombre,req.FechaNacimiento,req.Direccion, req.Pin,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
                     }
 
-                    // Si idReturn > 0, el usuario se actualizó correctamente
-                    if (idReturn > 0)
+                    // ✅ Manejo seguro de `idReturn` y `errorId`
+                    if (idReturn != null && idReturn == 0)
                     {
                         res.resultado = true;
                     }
-                    else // Manejar errores del SP
+                    else // Si no se insertó, manejar el error devuelto por el SP
                     {
                         res.resultado = false;
                         res.listaDeErrores.Add(new Error
@@ -259,13 +258,16 @@ namespace Backend.Logica
             catch (Exception ex)
             {
                 res.resultado = false;
-                Error error = new Error();
-                error.idError = -1;
-                error.error = ex.Message;
-                res.listaDeErrores.Add(error);
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
             }
+
             return res;
         }
+
 
 
 
