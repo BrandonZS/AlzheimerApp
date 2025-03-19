@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Backend.Entidades.Entity
 {
-    class Pregunta
+    public class Pregunta
     {
         public int IdPregunta { get; set; }
         public string Titulo { get; set; }
         public string Descripcion { get; set; }
-        public int IdJuego { get; set; }
-        public int IdImagen { get; set; }
+        public byte[] IdImagen { get; set; }
+        public List<Opcion> opciones { get; set; } = new List<Opcion>();
     }
 }
