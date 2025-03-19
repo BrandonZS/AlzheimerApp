@@ -615,7 +615,19 @@ namespace AccesoDatos
 		
 		private string _CORREO_ELECTRONICO;
 		
+		private System.DateTime _FECHA_NACIMIENTO;
+		
+		private System.Data.Linq.Binary _FOTO_PERFIL;
+		
+		private string _CODIGO;
+		
+		private string _DIRECCION;
+		
+		private int _ID_TIPO_USUARIO;
+		
 		private string _TOKEN_SESION;
+		
+		private System.Nullable<System.DateTime> _EXPIRACION;
 		
 		public SP_INSERTAR_SESIONResult()
 		{
@@ -669,6 +681,86 @@ namespace AccesoDatos
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FECHA_NACIMIENTO", DbType="Date NOT NULL")]
+		public System.DateTime FECHA_NACIMIENTO
+		{
+			get
+			{
+				return this._FECHA_NACIMIENTO;
+			}
+			set
+			{
+				if ((this._FECHA_NACIMIENTO != value))
+				{
+					this._FECHA_NACIMIENTO = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)")]
+		public System.Data.Linq.Binary FOTO_PERFIL
+		{
+			get
+			{
+				return this._FOTO_PERFIL;
+			}
+			set
+			{
+				if ((this._FOTO_PERFIL != value))
+				{
+					this._FOTO_PERFIL = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CODIGO", DbType="VarChar(6)")]
+		public string CODIGO
+		{
+			get
+			{
+				return this._CODIGO;
+			}
+			set
+			{
+				if ((this._CODIGO != value))
+				{
+					this._CODIGO = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DIRECCION", DbType="VarChar(255)")]
+		public string DIRECCION
+		{
+			get
+			{
+				return this._DIRECCION;
+			}
+			set
+			{
+				if ((this._DIRECCION != value))
+				{
+					this._DIRECCION = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID_TIPO_USUARIO", DbType="Int NOT NULL")]
+		public int ID_TIPO_USUARIO
+		{
+			get
+			{
+				return this._ID_TIPO_USUARIO;
+			}
+			set
+			{
+				if ((this._ID_TIPO_USUARIO != value))
+				{
+					this._ID_TIPO_USUARIO = value;
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TOKEN_SESION", DbType="NVarChar(255)")]
 		public string TOKEN_SESION
 		{
@@ -681,6 +773,22 @@ namespace AccesoDatos
 				if ((this._TOKEN_SESION != value))
 				{
 					this._TOKEN_SESION = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EXPIRACION", DbType="DateTime")]
+		public System.Nullable<System.DateTime> EXPIRACION
+		{
+			get
+			{
+				return this._EXPIRACION;
+			}
+			set
+			{
+				if ((this._EXPIRACION != value))
+				{
+					this._EXPIRACION = value;
 				}
 			}
 		}

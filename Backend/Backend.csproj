@@ -55,8 +55,10 @@
     <Compile Include="Entidades\Enums\CatalogoErrores.cs" />
     <Compile Include="Entidades\Enums\enumEstadoSesion.cs" />
     <Compile Include="Entidades\Request\ReqBase.cs" />
+    <Compile Include="Entidades\Request\ReqIniciarSesion.cs" />
     <Compile Include="Entidades\Request\ReqInsertarUsuario.cs" />
     <Compile Include="Entidades\Response\ResBase.cs" />
+    <Compile Include="Entidades\Response\ResIniciarSesion.cs" />
     <Compile Include="Entidades\Response\ResInsertarUsuario.cs" />
     <Compile Include="Logica\Usuario\Sesion\LogUsuario.cs" />
     <Compile Include="Logica\Usuario\Varios\Validaciones.cs" />

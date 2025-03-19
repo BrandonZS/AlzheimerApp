@@ -12,6 +12,8 @@ namespace Backend.Entidades
 
         public string CorreoElectronico { get; set; }
         public string Contrasena { get; set; }
-  
+        public string Origen { get; set; }
+
+
     }
 }

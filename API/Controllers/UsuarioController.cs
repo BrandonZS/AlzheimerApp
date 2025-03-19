@@ -14,10 +14,16 @@ namespace API.Controllers
     {
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route("api/usuario/insertar")]
-
         public  ResInsertarUsuario insertarUsuario(ReqInsertarUsuario req) //INVESTIGAR: Recibir y retornar HTTP
         {
             return new LogUsuario().insertarUsuario(req);
+        }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/iniciarsesion")]
+        public ResIniciarSesion iniciarSesion(ReqIniciarSesion req) //INVESTIGAR: Recibir y retornar HTTP
+        {
+            return new LogUsuario().iniciarSesion(req);
         }
     }
 }
