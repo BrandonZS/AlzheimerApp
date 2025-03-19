@@ -2024,8 +2024,8 @@ BEGIN
             U.FOTO_PERFIL,
             U.CODIGO,
             U.DIRECCION,
-            U.ID_TIPO_USUARIO,
-        FROM USUARIO 
+            U.ID_TIPO_USUARIO 
+        FROM USUARIO U
         INNER JOIN SESION S ON S.ID_USUARIO = U.ID_USUARIO
         WHERE S.TOKEN = @TOKEN AND S.FECHA_FINAL IS NULL;
 
