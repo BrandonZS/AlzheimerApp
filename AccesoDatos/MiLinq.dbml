@@ -82,7 +82,6 @@
   </Function>
   <Function Name="dbo.SP_CONSULTAR_SESION" Method="SP_CONSULTAR_SESION">
     <Parameter Name="TOKEN" Parameter="tOKEN" Type="System.String" DbType="NVarChar(MAX)" />
-    <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />

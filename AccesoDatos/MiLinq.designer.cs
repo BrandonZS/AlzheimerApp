@@ -146,13 +146,12 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CONSULTAR_SESION")]
-		public ISingleResult<SP_CONSULTAR_SESIONResult> SP_CONSULTAR_SESION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="TOKEN", DbType="NVarChar(MAX)")] string tOKEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public ISingleResult<SP_CONSULTAR_SESIONResult> SP_CONSULTAR_SESION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="TOKEN", DbType="NVarChar(MAX)")] string tOKEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), tOKEN, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
-			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(1)));
-			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(2)));
-			eRROR_CODE = ((string)(result.GetParameterValue(3)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), tOKEN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
+			eRROR_CODE = ((string)(result.GetParameterValue(2)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_CONSULTAR_SESIONResult>)(result.ReturnValue));
 		}
 		

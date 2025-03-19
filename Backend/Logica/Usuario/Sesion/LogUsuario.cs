@@ -126,20 +126,19 @@ namespace Backend.Logica
                 if (!res.listaDeErrores.Any())
                 {
                     //CERO errores ¡Todo bien!
-                    int? idReturn = 0;
                     int? errorId = 0;
                     string errorCode = "";
                     string errorDescrip = "";
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        var resultado = linq.SP_CONSULTAR_SESION(req.tokem, ref idReturn, ref errorId, ref errorCode, ref errorDescrip).FirstOrDefault(); // ✅ Extraer el primer resultado
+                        var resultado = linq.SP_CONSULTAR_SESION(req.tokem, ref errorId, ref errorCode, ref errorDescrip).FirstOrDefault(); // ✅ Extraer el primer resultado
 
                         if (resultado != null)
                         {
                             res.usuario = this.factoryUsurario(resultado);
                         }
                     }
-                    if (idReturn > 0) // Si el ID devuelto es mayor que 0, el usuario se insertó correctamente
+                    if (errorId == null || errorId == 0) 
                     {
                         res.resultado = true;
                     }
