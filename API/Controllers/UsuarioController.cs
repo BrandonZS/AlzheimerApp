@@ -32,6 +32,14 @@ namespace API.Controllers
         {
             return new LogUsuario().consultarSesion(req);
         }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/cerrarsesion")]
+        public ResCerrarSesion cerrarSesion(ReqCerrarSesion req)
+        {
+            return new LogUsuario().cerrarSesion(req);
+        }
+
     }
 }
     

@@ -142,147 +142,163 @@ namespace Backend.Logica.Usuario.Varios
             return errores;
         }
 
+
+        public static List<Error> validarCerrarSesion(ReqCerrarSesion req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
         //public static List<Error> validarEmpleado(ReqIngresarEmpleado req)
         //{
         //    List<Error> errores = new List<Error>();
 
-            //    if (req == null)
-            //    {
-            //        Error error = new Error();
-            //        error.idError = (int)CatalogoErrores.requestNull;
-            //        error.error = "Request null";
-            //        errores.Add(error);
-            //    }
-            //    else
-            //    {
-            //        if (String.IsNullOrEmpty(req.empleado.nombre))
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
-            //            error.error = "Falta el nombre del empleado";
-            //            errores.Add(error);
-            //        }
-            //        if (String.IsNullOrEmpty(req.empleado.apellido))
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.apellidoNuloVacio;
-            //            error.error = "Falta el apellido del empleado";
-            //            errores.Add(error);
-            //        }
-            //        if (String.IsNullOrEmpty(req.empleado.telefono))
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.telefonoNuloVacio;
-            //            error.error = "Falta el telefono del empleado";
-            //            errores.Add(error);
-            //        }
-            //        if (String.IsNullOrEmpty(req.empleado.espacialidad))
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.especialidadNuloVacio;
-            //            error.error = "Falta la especialidad del empleado";
-            //            errores.Add(error);
-            //        }
-            //    }
-            //    return errores;
-            //}
+        //    if (req == null)
+        //    {
+        //        Error error = new Error();
+        //        error.idError = (int)CatalogoErrores.requestNull;
+        //        error.error = "Request null";
+        //        errores.Add(error);
+        //    }
+        //    else
+        //    {
+        //        if (String.IsNullOrEmpty(req.empleado.nombre))
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
+        //            error.error = "Falta el nombre del empleado";
+        //            errores.Add(error);
+        //        }
+        //        if (String.IsNullOrEmpty(req.empleado.apellido))
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.apellidoNuloVacio;
+        //            error.error = "Falta el apellido del empleado";
+        //            errores.Add(error);
+        //        }
+        //        if (String.IsNullOrEmpty(req.empleado.telefono))
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.telefonoNuloVacio;
+        //            error.error = "Falta el telefono del empleado";
+        //            errores.Add(error);
+        //        }
+        //        if (String.IsNullOrEmpty(req.empleado.espacialidad))
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.especialidadNuloVacio;
+        //            error.error = "Falta la especialidad del empleado";
+        //            errores.Add(error);
+        //        }
+        //    }
+        //    return errores;
+        //}
 
-            //public static List<Error> validarServicio(ReqIngresarServicio req)
-            //{
-            //    List<Error> errores = new List<Error>();
+        //public static List<Error> validarServicio(ReqIngresarServicio req)
+        //{
+        //    List<Error> errores = new List<Error>();
 
-            //    if (req == null)
-            //    {
-            //        Error error = new Error();
-            //        error.idError = (int)CatalogoErrores.requestNull;
-            //        error.error = "Request null";
-            //        errores.Add(error);
-            //    }
-            //    else
-            //    {
-            //        if (String.IsNullOrEmpty(req.servicio.nombre))
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
-            //            error.error = "Falta el nombre del servicio";
-            //            errores.Add(error);
-            //        }
+        //    if (req == null)
+        //    {
+        //        Error error = new Error();
+        //        error.idError = (int)CatalogoErrores.requestNull;
+        //        error.error = "Request null";
+        //        errores.Add(error);
+        //    }
+        //    else
+        //    {
+        //        if (String.IsNullOrEmpty(req.servicio.nombre))
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
+        //            error.error = "Falta el nombre del servicio";
+        //            errores.Add(error);
+        //        }
 
-            //        if (String.IsNullOrEmpty(req.servicio.descripcion))
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.descripcionNuloVacio;
-            //            error.error = "Falta la descripcion del servicio";
-            //            errores.Add(error);
-            //        }
+        //        if (String.IsNullOrEmpty(req.servicio.descripcion))
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.descripcionNuloVacio;
+        //            error.error = "Falta la descripcion del servicio";
+        //            errores.Add(error);
+        //        }
 
-            //        if (req.servicio.duracionMinutos < 0)
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.duracionServicioNuloVacio;
-            //            error.error = "La duracion tiene que ser mayor a 0 ";
-            //            errores.Add(error);
-            //        }
+        //        if (req.servicio.duracionMinutos < 0)
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.duracionServicioNuloVacio;
+        //            error.error = "La duracion tiene que ser mayor a 0 ";
+        //            errores.Add(error);
+        //        }
 
-            //        if (req.servicio.precio < 0)
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.precioNuloVacio;
-            //            error.error = "El precio debe ser mayor a 0";
-            //            errores.Add(error);
-            //        }
-            //    }
-            //    return errores;
-            //}
+        //        if (req.servicio.precio < 0)
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.precioNuloVacio;
+        //            error.error = "El precio debe ser mayor a 0";
+        //            errores.Add(error);
+        //        }
+        //    }
+        //    return errores;
+        //}
 
-            //public static List<Error> validarProducto(ReqIngresarProducto req)
-            //{
-            //    List<Error> errores = new List<Error>();
+        //public static List<Error> validarProducto(ReqIngresarProducto req)
+        //{
+        //    List<Error> errores = new List<Error>();
 
-            //    if (req == null)
-            //    {
-            //        Error error = new Error();
-            //        error.idError = (int)CatalogoErrores.requestNull;
-            //        error.error = "Request null";
-            //        errores.Add(error);
-            //    }
-            //    else
-            //    {
-            //        if (String.IsNullOrEmpty(req.producto.nombre))
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
-            //            error.error = "Falta nombre del producto";
-            //            errores.Add(error);
-            //        }
+        //    if (req == null)
+        //    {
+        //        Error error = new Error();
+        //        error.idError = (int)CatalogoErrores.requestNull;
+        //        error.error = "Request null";
+        //        errores.Add(error);
+        //    }
+        //    else
+        //    {
+        //        if (String.IsNullOrEmpty(req.producto.nombre))
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
+        //            error.error = "Falta nombre del producto";
+        //            errores.Add(error);
+        //        }
 
-            //        if (String.IsNullOrEmpty(req.producto.descripcion))
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.descripcionNuloVacio;
-            //            error.error = "Falta descripcion del producto";
-            //            errores.Add(error);
-            //        }
+        //        if (String.IsNullOrEmpty(req.producto.descripcion))
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.descripcionNuloVacio;
+        //            error.error = "Falta descripcion del producto";
+        //            errores.Add(error);
+        //        }
 
-            //        if (req.producto.precio < 0)
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.precioNuloVacio;
-            //            error.error = "El producto tiene que valer mas de 0";
-            //            errores.Add(error);
-            //        }
+        //        if (req.producto.precio < 0)
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.precioNuloVacio;
+        //            error.error = "El producto tiene que valer mas de 0";
+        //            errores.Add(error);
+        //        }
 
-            //        if (req.producto.stock < 0)
-            //        {
-            //            Error error = new Error();
-            //            error.idError = (int)CatalogoErrores.stockNullVacio;
-            //            error.error = "El stock tiene que ser mayor a 0";
-            //            errores.Add(error);
-            //        }
+        //        if (req.producto.stock < 0)
+        //        {
+        //            Error error = new Error();
+        //            error.idError = (int)CatalogoErrores.stockNullVacio;
+        //            error.error = "El stock tiene que ser mayor a 0";
+        //            errores.Add(error);
+        //        }
 
-            //    }
-            //    return errores;
-            //}
+        //    }
+        //    return errores;
+        //}
 
 
         public static bool EsCorreoValido(string correo)

@@ -163,6 +163,58 @@ namespace Backend.Logica
             }
             return res;
         }
+
+        //revisar esta logica 
+        public ResCerrarSesion cerrarSesion(ReqCerrarSesion req)
+        {
+            ResCerrarSesion res = new ResCerrarSesion();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de la solicitud
+                res.listaDeErrores = Validaciones.validarCerrarSesion(req);
+
+                if (!res.listaDeErrores.Any()) // Si no hay errores, proceder con la consulta
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        // Ejecutar el Stored Procedure SP_CERRAR_SESION
+                        linq.SP_CERRAR_SESION( req.IdUsuario, req.Origen, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
+                    }
+
+                    // Si no hubo errores, se cierra la sesión correctamente
+                    if (idReturn == null || idReturn <0  )
+                    {
+                        res.resultado = true;
+                    }
+                    else // Manejar errores del SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                Error error = new Error();
+                error.idError = -1;
+                error.error = ex.Message;
+                res.listaDeErrores.Add(error);
+            }
+            return res;
+        }
+
         private Sesion factorySesion(SP_INSERTAR_SESIONResult tc)
         {
 
