@@ -2021,8 +2021,11 @@ BEGIN
             U.NOMBRE,
             U.CORREO_ELECTRONICO,
             U.FECHA_NACIMIENTO,
-            U.FOTO_PERFIL
-        FROM USUARIO U
+            U.FOTO_PERFIL,
+            U.CODIGO,
+            U.DIRECCION,
+            U.ID_TIPO_USUARIO,
+        FROM USUARIO 
         INNER JOIN SESION S ON S.ID_USUARIO = U.ID_USUARIO
         WHERE S.TOKEN = @TOKEN AND S.FECHA_FINAL IS NULL;
 
