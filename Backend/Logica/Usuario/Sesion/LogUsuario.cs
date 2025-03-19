@@ -78,9 +78,7 @@ namespace Backend.Logica
                     string errorDescrip = "";
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        var resultado = linq.SP_INSERTAR_SESION(req.CorreoElectronico, req.Contrasena, req.Origen,
-                                                                               ref idReturn, ref errorId, ref errorCode, ref errorDescrip)
-                                                       .FirstOrDefault(); // ✅ Extraer el primer resultado
+                        var resultado = linq.SP_INSERTAR_SESION(req.CorreoElectronico, req.Contrasena, req.Origen, ref idReturn, ref errorId, ref errorCode, ref errorDescrip).FirstOrDefault(); // ✅ Extraer el primer resultado
 
                         if (resultado != null)
                         {
@@ -113,6 +111,59 @@ namespace Backend.Logica
             return res;
         }
 
+
+
+        public ResConsultarSesion consultarSesion(ReqConsultarSesion req)
+        {
+
+            ResConsultarSesion res = new ResConsultarSesion();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                res.listaDeErrores = Validaciones.validarConsSesion(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    //CERO errores ¡Todo bien!
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        var resultado = linq.SP_CONSULTAR_SESION(req.tokem, ref idReturn, ref errorId, ref errorCode, ref errorDescrip).FirstOrDefault(); // ✅ Extraer el primer resultado
+
+                        if (resultado != null)
+                        {
+                            res.usuario = this.factoryUsurario(resultado);
+                        }
+                    }
+                    if (idReturn > 0) // Si el ID devuelto es mayor que 0, el usuario se insertó correctamente
+                    {
+                        res.resultado = true;
+                    }
+                    else // Si no se insertó, manejar el error devuelto por el SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                Error error = new Error();
+                error.idError = -1;
+                error.error = ex.Message;
+                res.listaDeErrores.Add(error);
+            }
+            return res;
+        }
         private Sesion factorySesion(SP_INSERTAR_SESIONResult tc)
         {
 
@@ -132,6 +183,23 @@ namespace Backend.Logica
             sesion.expira = (DateTime)tc.EXPIRACION;
 
             return sesion;
+        }
+
+        private Backend.Entidades.Usuario factoryUsurario(SP_CONSULTAR_SESIONResult tc)
+        {
+
+            Backend.Entidades.Usuario usuario = new Backend.Entidades.Usuario();
+            usuario.IdUsuario = (int)tc.ID_USUARIO;
+            usuario.Nombre = tc.NOMBRE;
+            usuario.CorreoElectronico = tc.CORREO_ELECTRONICO;
+            usuario.FechaNacimiento = tc.FECHA_NACIMIENTO;
+            usuario.FotoPerfil = tc.FOTO_PERFIL?.ToArray();
+            usuario.Codigo = tc.CODIGO;
+            usuario.Direccion = tc.DIRECCION;
+            usuario.IdTipoUsuario = tc.ID_TIPO_USUARIO;
+
+
+            return usuario;
         }
     }
 

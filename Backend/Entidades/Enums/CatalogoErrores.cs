@@ -32,5 +32,6 @@ namespace Backend.Entidades
         passwordFaltante = 20,
         passwordMuyDebil = 21,
         fechaInvalida = 22,
+        faltaTokem = 23,
     }
 }

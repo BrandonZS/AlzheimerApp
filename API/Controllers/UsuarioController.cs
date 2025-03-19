@@ -25,6 +25,13 @@ namespace API.Controllers
         {
             return new LogUsuario().iniciarSesion(req);
         }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/consultarsesion")]
+        public ResConsultarSesion consultarSesion(ReqConsultarSesion req) //INVESTIGAR: Recibir y retornar HTTP
+        {
+            return new LogUsuario().consultarSesion(req);
+        }
     }
 }
     
