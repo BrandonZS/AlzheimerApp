@@ -40,6 +40,14 @@ namespace API.Controllers
             return new LogUsuario().cerrarSesion(req);
         }
 
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/actualizarusuario")]
+        public ResActualizarUsuario actualizarUsuario(ReqActualizarUsuario req)
+        {
+            return new LogUsuario().actualizarUsuario(req);
+        }
+
+
     }
 }
     

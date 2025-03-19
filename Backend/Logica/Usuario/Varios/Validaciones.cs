@@ -30,8 +30,6 @@ namespace Backend.Logica.Usuario.Varios
                     errores.Add(error);
                 }
 
-    
-
                 if (String.IsNullOrEmpty(req.CorreoElectronico))
                 {
                     error.idError = (int)CatalogoErrores.correoNuloVacio;
@@ -158,6 +156,64 @@ namespace Backend.Logica.Usuario.Varios
 
             return errores;
         }
+        public static List<Error> validarActualizarUsuario(ReqActualizarUsuario req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(req.Nombre))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.nombreNuloVacio,
+                        error = "Falta el nombre del usuario"
+                    });
+                }
+
+                // ✅ Primero, verificar si la fecha está vacía (default DateTime es 01/01/0001)
+                if (req.FechaNacimiento == default(DateTime))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.fechaVacia,
+                        error = "Falta la fecha de nacimiento"
+                    });
+                }
+                // ✅ Luego, verificar si la fecha es inválida según la función helper
+                else if (!EsFechaNacimientoValida(req.FechaNacimiento))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.fechaInvalida,
+                        error = "Fecha de nacimiento inválida"
+                    });
+                }
+
+                if (string.IsNullOrEmpty(req.Direccion))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.direccionVacia,
+                        error = "Falta asignar dirección"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        
+
+        
         //public static List<Error> validarEmpleado(ReqIngresarEmpleado req)
         //{
         //    List<Error> errores = new List<Error>();

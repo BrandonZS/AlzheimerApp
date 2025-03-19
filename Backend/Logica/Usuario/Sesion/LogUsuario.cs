@@ -215,6 +215,60 @@ namespace Backend.Logica
             return res;
         }
 
+
+        //revisar esta logica 
+        public ResActualizarUsuario actualizarUsuario(ReqActualizarUsuario req)
+        {
+            ResActualizarUsuario res = new ResActualizarUsuario();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de la solicitud
+                res.listaDeErrores = Validaciones.validarActualizarUsuario(req);
+
+                if (!res.listaDeErrores.Any()) // Si no hay errores, proceder con la actualización
+                {
+                    int? idReturn = 0;  
+                    int? errorId = 0;   
+                    string errorCode = "";  
+                    string errorDescrip = ""; 
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        // Ejecutar el Stored Procedure SP_ACTUALIZAR_USUARIO
+                        linq.SP_ACTUALIZAR_USUARIO( req.IdUsuario,req.Nombre, req.FechaNacimiento,req.Direccion, req.Pin,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    // Si idReturn > 0, el usuario se actualizó correctamente
+                    if (idReturn > 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else // Manejar errores del SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                Error error = new Error();
+                error.idError = -1;
+                error.error = ex.Message;
+                res.listaDeErrores.Add(error);
+            }
+            return res;
+        }
+
+
+
         private Sesion factorySesion(SP_INSERTAR_SESIONResult tc)
         {
 
