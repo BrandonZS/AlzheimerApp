@@ -310,6 +310,117 @@ namespace Backend.Logica
 
             return res;
         }
+        //La relacion a nivel de base de datos si se efectua, pero en posman da false 
+        public ResInsertarRelacion insertarRelacion(ReqInsertarRelacion req)
+        {
+            ResInsertarRelacion res = new ResInsertarRelacion();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de la solicitud
+                res.listaDeErrores = Validaciones.validarInsertarRelacion(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_INSERTAR_RELACION( req.IdUsuarioCuidador,req.CodigoPaciente,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (idReturn.HasValue && idReturn > 0)  // ✅ Usa .HasValue para evitar null
+                    {
+                        res.resultado = true;
+                    }
+                    else // Si no se insertó, manejar el error devuelto por el SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
+        public ResObtenerRelacion obtenerRelacion(ReqObtenerRelacion req)
+        {
+            ResObtenerRelacion res = new ResObtenerRelacion();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de la solicitud
+                res.listaDeErrores = Validaciones.validarObtenerRelacion(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        var resultado = linq.SP_OBTENER_RELACION(
+                            req.IdCuidador,
+                            ref errorId,
+                            ref errorCode,
+                            ref errorDescrip
+                        ).ToList(); // ✅ Convertimos el resultado en una lista
+                    }
+
+                    if (errorId == null || errorId == 0)
+                    {
+                        res.resultado = true;
+                        res.pacientes = resultado.Select(tc => new Paciente
+                        {
+                            IdPaciente = tc.ID_PACIENTE,
+                            Nombre = tc.NOMBRE,
+                            FechaNacimiento = tc.FECHA_NACIMIENTO
+                        }).ToList();
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = errorId ?? -1,
+                            error = !string.IsNullOrEmpty(errorCode) ? errorCode : "Error desconocido"
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
 
 
 

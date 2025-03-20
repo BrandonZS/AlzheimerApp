@@ -249,6 +249,30 @@ namespace Backend.Logica.Usuario.Varios
 
             return errores;
         }
+        public static List<Error> validarInsertarRelacion(ReqInsertarRelacion req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else if (string.IsNullOrEmpty(req.CodigoPaciente))
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.codigoPacienteInvalido,
+                    error = "El código del paciente no puede estar vacío"
+                });
+            }
+
+            return errores;
+        }
+
 
 
 

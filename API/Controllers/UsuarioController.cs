@@ -52,6 +52,13 @@ namespace API.Controllers
         {
             return new LogUsuario().actualizarContrasena(req);
         }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/insertarrelacion")]
+        public ResInsertarRelacion insertarRelacion(ReqInsertarRelacion req)
+        {
+            return new LogUsuario().insertarRelacion(req);
+        }
+
 
 
 

@@ -60,13 +60,16 @@
     <Compile Include="Entidades\Request\ReqCerrarSesion.cs" />
     <Compile Include="Entidades\Request\ReqConsultarSesion.cs" />
     <Compile Include="Entidades\Request\ReqIniciarSesion.cs" />
+    <Compile Include="Entidades\Request\ReqInsertarRelacion.cs" />
     <Compile Include="Entidades\Request\ReqInsertarUsuario.cs" />
+    <Compile Include="Entidades\Request\ReqObtenerRelacion.cs" />
     <Compile Include="Entidades\Response\ResActualizarContrasena.cs" />
     <Compile Include="Entidades\Response\ResActualizarUsuario.cs" />
     <Compile Include="Entidades\Response\ResBase.cs" />
     <Compile Include="Entidades\Response\ResCerrarSesion.cs" />
     <Compile Include="Entidades\Response\ResConsultarSesion.cs" />
     <Compile Include="Entidades\Response\ResIniciarSesion.cs" />
+    <Compile Include="Entidades\Response\ResInsertarRelacion.cs" />
     <Compile Include="Entidades\Response\ResInsertarUsuario.cs" />
     <Compile Include="Logica\Usuario\Sesion\LogUsuario.cs" />
     <Compile Include="Logica\Usuario\Varios\Validaciones.cs" />

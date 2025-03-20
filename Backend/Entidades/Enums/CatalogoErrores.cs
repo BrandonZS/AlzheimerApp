@@ -36,6 +36,7 @@ namespace Backend.Entidades
         fechaVacia = 24,  
         direccionVacia = 25,
         contrasenaActualVacia = 26,
-        nuevaContrasenaVacia = 27,  
+        nuevaContrasenaVacia = 27,
+        codigoPacienteInvalido = 28,    
     }
 }
