@@ -112,8 +112,6 @@ namespace Backend.Logica.Usuario.Varios
             }
             return errores;
         }
-
-
         public static List<Error> validarConsSesion(ReqConsultarSesion req)
         {
             List<Error> errores = new List<Error>();
@@ -139,8 +137,6 @@ namespace Backend.Logica.Usuario.Varios
             }
             return errores;
         }
-
-
         public static List<Error> validarCerrarSesion(ReqCerrarSesion req)
         {
             List<Error> errores = new List<Error>();
@@ -210,10 +206,54 @@ namespace Backend.Logica.Usuario.Varios
 
             return errores;
         }
+        public static List<Error> validarActualizarContrasena(ReqActualizarContrasena req)
+        {
+            List<Error> errores = new List<Error>();
 
-        
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(req.ContrasenaActual))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.contrasenaActualVacia,
+                        error = "La contraseña actual no puede estar vacía"
+                    });
+                }
 
-        
+                if (string.IsNullOrEmpty(req.NuevaContrasena))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.nuevaContrasenaVacia,
+                        error = "La nueva contraseña no puede estar vacía"
+                    });
+                }
+                else if (!EsPasswordSeguro(req.NuevaContrasena)) // ✅ Validación de contraseña segura
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.passwordMuyDebil,
+                        error = "La nueva contraseña es demasiado débil"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+
+
+
+
         //public static List<Error> validarEmpleado(ReqIngresarEmpleado req)
         //{
         //    List<Error> errores = new List<Error>();

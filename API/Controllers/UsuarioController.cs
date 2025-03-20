@@ -46,6 +46,13 @@ namespace API.Controllers
         {
             return new LogUsuario().actualizarUsuario(req);
         }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/actualizarcontrasena")]
+        public ResActualizarContrasena actualizarContrasena(ReqActualizarContrasena req)
+        {
+            return new LogUsuario().actualizarContrasena(req);
+        }
+
 
 
     }

@@ -111,8 +111,6 @@ namespace Backend.Logica
             return res;
         }
 
-
-
         public ResConsultarSesion consultarSesion(ReqConsultarSesion req)
         {
 
@@ -163,8 +161,7 @@ namespace Backend.Logica
             }
             return res;
         }
-
-        //revisar esta logica 
+        //Funciona
         public ResCerrarSesion cerrarSesion(ReqCerrarSesion req)
         {
             ResCerrarSesion res = new ResCerrarSesion();
@@ -214,8 +211,6 @@ namespace Backend.Logica
             }
             return res;
         }
-
-
         //Funciona
         public ResActualizarUsuario actualizarUsuario(ReqActualizarUsuario req)
         {
@@ -241,6 +236,54 @@ namespace Backend.Logica
 
                     // ✅ Manejo seguro de `idReturn` y `errorId`
                     if (idReturn != null && idReturn == 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else // Si no se insertó, manejar el error devuelto por el SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+        //Funciona
+        public ResActualizarContrasena actualizarContrasena(ReqActualizarContrasena req)
+        {
+            ResActualizarContrasena res = new ResActualizarContrasena();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                res.listaDeErrores = Validaciones.validarActualizarContrasena(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_ACTUALIZAR_CONTRASENA( req.IdUsuario,req.ContrasenaActual,req.NuevaContrasena,req.Pin,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (errorId == null || errorId == 0)
                     {
                         res.resultado = true;
                     }
