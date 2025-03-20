@@ -33,5 +33,10 @@ namespace Backend.Entidades
         passwordMuyDebil = 21,
         fechaInvalida = 22,
         faltaTokem = 23,
+        fechaVacia = 24,  
+        direccionVacia = 25,
+        contrasenaActualVacia = 26,
+        nuevaContrasenaVacia = 27,
+        codigoPacienteInvalido = 28,    
     }
 }

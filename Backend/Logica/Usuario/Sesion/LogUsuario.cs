@@ -111,8 +111,6 @@ namespace Backend.Logica
             return res;
         }
 
-
-
         public ResConsultarSesion consultarSesion(ReqConsultarSesion req)
         {
 
@@ -163,6 +161,270 @@ namespace Backend.Logica
             }
             return res;
         }
+        //Funciona
+        public ResCerrarSesion cerrarSesion(ReqCerrarSesion req)
+        {
+            ResCerrarSesion res = new ResCerrarSesion();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de la solicitud
+                res.listaDeErrores = Validaciones.validarCerrarSesion(req);
+
+                if (!res.listaDeErrores.Any()) // Si no hay errores, proceder con la consulta
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        // Ejecutar el Stored Procedure SP_CERRAR_SESION
+                        var resultado = linq.SP_CERRAR_SESION( req.IdUsuario, req.Origen, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
+                    }
+
+                    // ✅ Manejo seguro de `idReturn` y `errorId`
+                    if (idReturn != null && idReturn == 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else // Si no se insertó, manejar el error devuelto por el SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                Error error = new Error();
+                error.idError = -1;
+                error.error = ex.Message;
+                res.listaDeErrores.Add(error);
+            }
+            return res;
+        }
+        //Funciona
+        public ResActualizarUsuario actualizarUsuario(ReqActualizarUsuario req)
+        {
+            ResActualizarUsuario res = new ResActualizarUsuario();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                res.listaDeErrores = Validaciones.validarActualizarUsuario(req);
+
+                if (!res.listaDeErrores.Any()) 
+                {
+                    //CERO errores ¡Todo bien!
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        var resultado = linq.SP_ACTUALIZAR_USUARIO( req.IdUsuario,req.Nombre,req.FechaNacimiento,req.Direccion, req.Pin,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    // ✅ Manejo seguro de `idReturn` y `errorId`
+                    if (idReturn != null && idReturn == 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else // Si no se insertó, manejar el error devuelto por el SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+        //Funciona
+        public ResActualizarContrasena actualizarContrasena(ReqActualizarContrasena req)
+        {
+            ResActualizarContrasena res = new ResActualizarContrasena();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                res.listaDeErrores = Validaciones.validarActualizarContrasena(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_ACTUALIZAR_CONTRASENA( req.IdUsuario,req.ContrasenaActual,req.NuevaContrasena,req.Pin,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (errorId == null || errorId == 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else // Si no se insertó, manejar el error devuelto por el SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+        //La relacion a nivel de base de datos si se efectua, pero en posman da false 
+        public ResInsertarRelacion insertarRelacion(ReqInsertarRelacion req)
+        {
+            ResInsertarRelacion res = new ResInsertarRelacion();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de la solicitud
+                res.listaDeErrores = Validaciones.validarInsertarRelacion(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_INSERTAR_RELACION( req.IdUsuarioCuidador,req.CodigoPaciente,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (idReturn.HasValue && idReturn > 0)  // ✅ Usa .HasValue para evitar null
+                    {
+                        res.resultado = true;
+                    }
+                    else // Si no se insertó, manejar el error devuelto por el SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
+        public ResObtenerRelacion obtenerRelacion(ReqObtenerRelacion req)
+        {
+            ResObtenerRelacion res = new ResObtenerRelacion();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de la solicitud
+                res.listaDeErrores = Validaciones.validarObtenerRelacion(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        var resultado = linq.SP_OBTENER_RELACION(
+                            req.IdCuidador,
+                            ref errorId,
+                            ref errorCode,
+                            ref errorDescrip
+                        ).ToList(); // ✅ Convertimos el resultado en una lista
+                    }
+
+                    if (errorId == null || errorId == 0)
+                    {
+                        res.resultado = true;
+                        res.pacientes = resultado.Select(tc => new Paciente
+                        {
+                            IdPaciente = tc.ID_PACIENTE,
+                            Nombre = tc.NOMBRE,
+                            FechaNacimiento = tc.FECHA_NACIMIENTO
+                        }).ToList();
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = errorId ?? -1,
+                            error = !string.IsNullOrEmpty(errorCode) ? errorCode : "Error desconocido"
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
+
+
+
+
         private Sesion factorySesion(SP_INSERTAR_SESIONResult tc)
         {
 

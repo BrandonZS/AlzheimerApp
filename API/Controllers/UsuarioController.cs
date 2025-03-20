@@ -32,6 +32,36 @@ namespace API.Controllers
         {
             return new LogUsuario().consultarSesion(req);
         }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/cerrarsesion")]
+        public ResCerrarSesion cerrarSesion(ReqCerrarSesion req)
+        {
+            return new LogUsuario().cerrarSesion(req);
+        }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/actualizarusuario")]
+        public ResActualizarUsuario actualizarUsuario(ReqActualizarUsuario req)
+        {
+            return new LogUsuario().actualizarUsuario(req);
+        }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/actualizarcontrasena")]
+        public ResActualizarContrasena actualizarContrasena(ReqActualizarContrasena req)
+        {
+            return new LogUsuario().actualizarContrasena(req);
+        }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/insertarrelacion")]
+        public ResInsertarRelacion insertarRelacion(ReqInsertarRelacion req)
+        {
+            return new LogUsuario().insertarRelacion(req);
+        }
+
+
+
+
     }
 }
     
