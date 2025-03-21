@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Backend.Entidades.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Backend.Entidades
     {
         public int IdJuego { get; set; }
         public string Nombre { get; set; }
-        public int IdUsuarioCreador { get; set; }
+        public List<Pregunta> preguntas { get; set; } = new List<Pregunta>();
 
     }
 }

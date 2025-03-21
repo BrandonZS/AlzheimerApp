@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Backend.Entidades
 {
-   public class Opcion
+    public class ReqInsertarJuego
     {
-        public int IdOpcion { get; set; }
-        public string Descripcion { get; set; }
-        public bool Condicion { get; set; } 
+        public int idUsuario { get; set; }
+        public string nombre { get; set; }
     }
 }
