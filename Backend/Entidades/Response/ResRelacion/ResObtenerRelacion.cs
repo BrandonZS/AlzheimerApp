@@ -8,6 +8,8 @@ namespace Backend.Entidades
 {
    public class ResObtenerRelacion : ResBase
     {
+        public List<Usuario> listaUsuarios { get; set; } // ✅ importante
+
 
     }
 }

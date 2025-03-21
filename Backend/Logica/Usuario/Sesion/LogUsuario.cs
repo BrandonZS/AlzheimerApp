@@ -310,7 +310,7 @@ namespace Backend.Logica
 
             return res;
         }
-        //La relacion a nivel de base de datos si se efectua, pero en posman da false 
+        //Funciona
         public ResInsertarRelacion insertarRelacion(ReqInsertarRelacion req)
         {
             ResInsertarRelacion res = new ResInsertarRelacion();
@@ -322,22 +322,17 @@ namespace Backend.Logica
 
                 if (!res.listaDeErrores.Any())
                 {
+                    int? idReturn = 0;
                     int? errorId = 0;
                     string errorCode = "";
                     string errorDescrip = "";
 
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        linq.SP_INSERTAR_RELACION(
-                            req.IdUsuarioCuidador,
-                            req.CodigoPaciente,
-                            ref errorId,
-                            ref errorCode,
-                            ref errorDescrip
-                        );
+                        linq.SP_INSERTAR_RELACION(req.IdUsuarioCuidador,req.CodigoPaciente,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
                     }
 
-                    if (errorId == null || errorId == 0) // ✅ Ya no se evalúa idReturn
+                    if (idReturn.HasValue && idReturn > 0)
                     {
                         res.resultado = true;
                     }
@@ -365,6 +360,7 @@ namespace Backend.Logica
             return res;
         }
 
+
         //Revisar
         public ResObtenerRelacion obtenerRelacion(ReqObtenerRelacion req)
         {
@@ -373,7 +369,6 @@ namespace Backend.Logica
 
             try
             {
-                // Validar los datos de la solicitud
                 res.listaDeErrores = Validaciones.validarObtenerRelacion(req);
 
                 if (!res.listaDeErrores.Any())
@@ -384,23 +379,22 @@ namespace Backend.Logica
 
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        var resultado = linq.SP_OBTENER_RELACION(req.IdUsuario, ref errorId,ref errorCode,ref errorDescrip
-                        ).ToList(); // ✅ Convertimos el resultado en una lista
-                    }
+                        var resultado = linq.SP_OBTENER_RELACION(req.IdUsuario, ref errorId, ref errorCode, ref errorDescrip).ToList();
 
-                    if (errorId == null || errorId == 0)
-                    {
-                        res.resultado = true;
-                       
-                    }
-                    else // Si no se insertó, manejar el error devuelto por el SP
-                    {
-                        res.resultado = false;
-                        res.listaDeErrores.Add(new Error
+                        if (errorId == null || errorId == 0)
                         {
-                            idError = (int)errorId,
-                            error = errorCode
-                        });
+                            res.resultado = true;
+                            res.listaUsuarios = resultado.Select(factoryUsuarioRelacion).ToList(); 
+                        }
+                        else
+                        {
+                            res.resultado = false;
+                            res.listaDeErrores.Add(new Error
+                            {
+                                idError = (int)errorId,
+                                error = errorCode
+                            });
+                        }
                     }
                 }
             }
@@ -416,6 +410,8 @@ namespace Backend.Logica
 
             return res;
         }
+
+
 
         public ResEliminarRelacion eliminarRelacion(ReqEliminarRelacion req)
         {
@@ -507,6 +503,18 @@ namespace Backend.Logica
 
             return usuario;
         }
+
+        private Backend.Entidades.Usuario factoryUsuarioRelacion(SP_OBTENER_RELACIONResult tc)
+        {
+            return new Backend.Entidades.Usuario
+            {
+                IdUsuario = tc.ID_PACIENTE,
+                Nombre = tc.NOMBRE,
+                FechaNacimiento = tc.FECHA_NACIMIENTO
+            };
+        }
+
+
     }
 
 }
