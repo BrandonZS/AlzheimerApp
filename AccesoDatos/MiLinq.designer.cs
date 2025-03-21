@@ -558,7 +558,7 @@ namespace AccesoDatos
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)", CanBeNull=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)")]
 		public System.Data.Linq.Binary FOTO_PERFIL
 		{
 			get
@@ -714,7 +714,7 @@ namespace AccesoDatos
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)", CanBeNull=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)")]
 		public System.Data.Linq.Binary FOTO_PERFIL
 		{
 			get
