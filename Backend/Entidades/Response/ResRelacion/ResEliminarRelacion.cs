@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Entidades
 {
-   public class ResObtenerRelacion : ResBase
+   public class ResEliminarRelacion : ResBase
     {
 
     }

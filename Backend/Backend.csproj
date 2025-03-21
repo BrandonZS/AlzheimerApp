@@ -54,8 +54,31 @@
     <Compile Include="Entidades\Entity\Usuario.cs" />
     <Compile Include="Entidades\Enums\CatalogoErrores.cs" />
     <Compile Include="Entidades\Enums\enumEstadoSesion.cs" />
+    <Compile Include="Entidades\Enums\ErroresBrandon.cs" />
     <Compile Include="Entidades\Request\ReqBase.cs" />
+    <Compile Include="Entidades\Request\ReqJuego\ReqInsertarJuego.cs" />
+    <Compile Include="Entidades\Request\ReqRelacion\ReqEliminarRelacion.cs" />
+    <Compile Include="Entidades\Request\ReqRelacion\ReqInsertarRelacion.cs" />
+    <Compile Include="Entidades\Request\ReqRelacion\ReqObtenerRelacion.cs" />
+    <Compile Include="Entidades\Request\ReqSesion\ReqCerrarSesion.cs" />
+    <Compile Include="Entidades\Request\ReqSesion\ReqConsultarSesion.cs" />
+    <Compile Include="Entidades\Request\ReqSesion\ReqIniciarSesion.cs" />
+    <Compile Include="Entidades\Request\ReqUsuario\ReqActualizarContrasena.cs" />
+    <Compile Include="Entidades\Request\ReqUsuario\ReqActualizarUsuario.cs" />
+    <Compile Include="Entidades\Request\ReqUsuario\ReqInsertarUsuario.cs" />
     <Compile Include="Entidades\Response\ResBase.cs" />
+    <Compile Include="Entidades\Response\ResJuego\ResInsertarJuego.cs" />
+    <Compile Include="Entidades\Response\ResRelacion\ResEliminarRelacion.cs" />
+    <Compile Include="Entidades\Response\ResRelacion\ResInsertarRelacion.cs" />
+    <Compile Include="Entidades\Response\ResRelacion\ResObtenerRelacion.cs" />
+    <Compile Include="Entidades\Response\ResSesion\ResCerrarSesion.cs" />
+    <Compile Include="Entidades\Response\ResSesion\ResConsultarSesion.cs" />
+    <Compile Include="Entidades\Response\ResSesion\ResIniciarSesion.cs" />
+    <Compile Include="Entidades\Response\ResUsuario\ResActualizarContrasena.cs" />
+    <Compile Include="Entidades\Response\ResUsuario\ResActualizarUsuario.cs" />
+    <Compile Include="Entidades\Response\ResUsuario\ResInsertarUsuario.cs" />
+    <Compile Include="Logica\Juego\LogJuego.cs" />
+    <Compile Include="Logica\Juego\ValidarJuego.cs" />
     <Compile Include="Logica\Usuario\Sesion\LogUsuario.cs" />
     <Compile Include="Logica\Usuario\Varios\Validaciones.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,7 +87,6 @@
   <ItemGroup>
     <Folder Include="Logica\Evento\" />
     <Folder Include="Logica\Helpers\" />
-    <Folder Include="Logica\Juego\" />
     <Folder Include="Logica\Mensaje\" />
   </ItemGroup>
   <ItemGroup>

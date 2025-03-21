@@ -360,7 +360,7 @@ namespace Backend.Logica
 
             return res;
         }
-
+        //Revisar
         public ResObtenerRelacion obtenerRelacion(ReqObtenerRelacion req)
         {
             ResObtenerRelacion res = new ResObtenerRelacion();
@@ -389,6 +389,54 @@ namespace Backend.Logica
                        
                     }
                     else // Si no se insertó, manejar el error devuelto por el SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
+        public ResEliminarRelacion eliminarRelacion(ReqEliminarRelacion req)
+        {
+            ResEliminarRelacion res = new ResEliminarRelacion();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                res.listaDeErrores = Validaciones.validarEliminarRelacion(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_ELIMINAR_RELACION(req.IdUsuarioCuidador,req.IdUsuarioPaciente,req.CodigoPing,ref errorId, ref errorCode,ref errorDescrip);
+                    }
+
+                    if (errorId == null || errorId == 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else 
                     {
                         res.resultado = false;
                         res.listaDeErrores.Add(new Error

@@ -58,6 +58,12 @@ namespace API.Controllers
         {
             return new LogUsuario().insertarRelacion(req);
         }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/eliminarrelacion")]
+        public ResEliminarRelacion eliminarRelacion(ReqEliminarRelacion req)
+        {
+            return new LogUsuario().eliminarRelacion(req);
+        }
 
 
 
