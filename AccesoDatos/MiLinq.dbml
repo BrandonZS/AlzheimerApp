@@ -10,15 +10,17 @@
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
-  <Function Name="dbo.SP_OBTENER_RELACION" Method="SP_OBTENER_RELACION">
-    <Parameter Name="ID_CUIDADOR" Parameter="iD_CUIDADOR" Type="System.Int32" DbType="Int" />
+  <Function Name="dbo.SP_OBTENER_PUNTAJE" Method="SP_OBTENER_PUNTAJE">
+    <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
-    <ElementType Name="SP_OBTENER_RELACIONResult">
-      <Column Name="ID_PACIENTE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="NOMBRE" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="FECHA_NACIMIENTO" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+    <ElementType Name="SP_OBTENER_PUNTAJEResult">
+      <Column Name="ID_PUNTAJE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ID_JUEGO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NOMBRE_JUEGO" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="PUNTAJE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FECHA_HORA" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.SP_ACTUALIZAR_ESTADO_MENSAJES" Method="SP_ACTUALIZAR_ESTADO_MENSAJES">
@@ -234,7 +236,6 @@
   <Function Name="dbo.SP_INSERTAR_RELACION" Method="SP_INSERTAR_RELACION">
     <Parameter Name="ID_USUARIO_CUIDADOR" Parameter="iD_USUARIO_CUIDADOR" Type="System.Int32" DbType="Int" />
     <Parameter Name="CODIGO_PACIENTE" Parameter="cODIGO_PACIENTE" Type="System.String" DbType="VarChar(6)" />
-    <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
@@ -355,17 +356,15 @@
       <Column Name="OPCIONES" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.SP_OBTENER_PUNTAJE" Method="SP_OBTENER_PUNTAJE">
-    <Parameter Name="ID_PACIENTE" Parameter="iD_PACIENTE" Type="System.Int32" DbType="Int" />
+  <Function Name="dbo.SP_OBTENER_RELACION" Method="SP_OBTENER_RELACION">
+    <Parameter Name="ID_CUIDADOR" Parameter="iD_CUIDADOR" Type="System.Int32" DbType="Int" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />
-    <ElementType Name="SP_OBTENER_PUNTAJEResult">
-      <Column Name="ID_PUNTAJE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ID_JUEGO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="NOMBRE_JUEGO" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="PUNTAJE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="FECHA_HORA" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    <ElementType Name="SP_OBTENER_RELACIONResult">
+      <Column Name="ID_PACIENTE" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NOMBRE" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="FECHA_NACIMIENTO" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>

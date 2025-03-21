@@ -318,32 +318,36 @@ namespace Backend.Logica
 
             try
             {
-                
                 res.listaDeErrores = Validaciones.validarInsertarRelacion(req);
 
                 if (!res.listaDeErrores.Any())
                 {
-                    int? idReturn = 0;
                     int? errorId = 0;
                     string errorCode = "";
                     string errorDescrip = "";
 
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        linq.SP_INSERTAR_RELACION(req.IdUsuarioCuidador, req.CodigoPaciente, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
+                        linq.SP_INSERTAR_RELACION(
+                            req.IdUsuarioCuidador,
+                            req.CodigoPaciente,
+                            ref errorId,
+                            ref errorCode,
+                            ref errorDescrip
+                        );
                     }
 
-                    if (idReturn.HasValue && idReturn > 0)  
+                    if (errorId == null || errorId == 0) // ✅ Ya no se evalúa idReturn
                     {
                         res.resultado = true;
                     }
-                    else 
+                    else
                     {
                         res.resultado = false;
                         res.listaDeErrores.Add(new Error
                         {
-                            idError = (int)errorId,
-                            error = errorCode
+                            idError = (int)(errorId ?? -1),
+                            error = !string.IsNullOrEmpty(errorCode) ? errorCode : "Error desconocido"
                         });
                     }
                 }
@@ -360,6 +364,7 @@ namespace Backend.Logica
 
             return res;
         }
+
         //Revisar
         public ResObtenerRelacion obtenerRelacion(ReqObtenerRelacion req)
         {

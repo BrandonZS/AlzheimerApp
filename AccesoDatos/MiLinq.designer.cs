@@ -72,14 +72,14 @@ namespace AccesoDatos
 			return ((int)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_RELACION")]
-		public ISingleResult<SP_OBTENER_RELACIONResult> SP_OBTENER_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_PUNTAJE")]
+		public ISingleResult<SP_OBTENER_PUNTAJEResult> SP_OBTENER_PUNTAJE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
 			eRROR_CODE = ((string)(result.GetParameterValue(2)));
 			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
-			return ((ISingleResult<SP_OBTENER_RELACIONResult>)(result.ReturnValue));
+			return ((ISingleResult<SP_OBTENER_PUNTAJEResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_MENSAJES")]
@@ -305,13 +305,12 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_RELACION")]
-		public int SP_INSERTAR_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO_CUIDADOR", DbType="Int")] System.Nullable<int> iD_USUARIO_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CODIGO_PACIENTE", DbType="VarChar(6)")] string cODIGO_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_INSERTAR_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO_CUIDADOR", DbType="Int")] System.Nullable<int> iD_USUARIO_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CODIGO_PACIENTE", DbType="VarChar(6)")] string cODIGO_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_USUARIO_CUIDADOR, cODIGO_PACIENTE, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
-			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(2)));
-			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(3)));
-			eRROR_CODE = ((string)(result.GetParameterValue(4)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(5)));
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_USUARIO_CUIDADOR, cODIGO_PACIENTE, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(2)));
+			eRROR_CODE = ((string)(result.GetParameterValue(3)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -398,74 +397,110 @@ namespace AccesoDatos
 			return ((ISingleResult<SP_OBTENER_PREGUNTASResult>)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_PUNTAJE")]
-		public ISingleResult<SP_OBTENER_PUNTAJEResult> SP_OBTENER_PUNTAJE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_RELACION")]
+		public ISingleResult<SP_OBTENER_RELACIONResult> SP_OBTENER_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_PACIENTE, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_CUIDADOR, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(1)));
 			eRROR_CODE = ((string)(result.GetParameterValue(2)));
 			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
-			return ((ISingleResult<SP_OBTENER_PUNTAJEResult>)(result.ReturnValue));
+			return ((ISingleResult<SP_OBTENER_RELACIONResult>)(result.ReturnValue));
 		}
 	}
 	
-	public partial class SP_OBTENER_RELACIONResult
+	public partial class SP_OBTENER_PUNTAJEResult
 	{
 		
-		private int _ID_PACIENTE;
+		private int _ID_PUNTAJE;
 		
-		private string _NOMBRE;
+		private int _ID_JUEGO;
 		
-		private System.DateTime _FECHA_NACIMIENTO;
+		private string _NOMBRE_JUEGO;
 		
-		public SP_OBTENER_RELACIONResult()
+		private int _PUNTAJE;
+		
+		private System.Nullable<System.DateTime> _FECHA_HORA;
+		
+		public SP_OBTENER_PUNTAJEResult()
 		{
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID_PACIENTE", DbType="Int NOT NULL")]
-		public int ID_PACIENTE
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID_PUNTAJE", DbType="Int NOT NULL")]
+		public int ID_PUNTAJE
 		{
 			get
 			{
-				return this._ID_PACIENTE;
+				return this._ID_PUNTAJE;
 			}
 			set
 			{
-				if ((this._ID_PACIENTE != value))
+				if ((this._ID_PUNTAJE != value))
 				{
-					this._ID_PACIENTE = value;
+					this._ID_PUNTAJE = value;
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NOMBRE", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string NOMBRE
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID_JUEGO", DbType="Int NOT NULL")]
+		public int ID_JUEGO
 		{
 			get
 			{
-				return this._NOMBRE;
+				return this._ID_JUEGO;
 			}
 			set
 			{
-				if ((this._NOMBRE != value))
+				if ((this._ID_JUEGO != value))
 				{
-					this._NOMBRE = value;
+					this._ID_JUEGO = value;
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FECHA_NACIMIENTO", DbType="Date NOT NULL")]
-		public System.DateTime FECHA_NACIMIENTO
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NOMBRE_JUEGO", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string NOMBRE_JUEGO
 		{
 			get
 			{
-				return this._FECHA_NACIMIENTO;
+				return this._NOMBRE_JUEGO;
 			}
 			set
 			{
-				if ((this._FECHA_NACIMIENTO != value))
+				if ((this._NOMBRE_JUEGO != value))
 				{
-					this._FECHA_NACIMIENTO = value;
+					this._NOMBRE_JUEGO = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PUNTAJE", DbType="Int NOT NULL")]
+		public int PUNTAJE
+		{
+			get
+			{
+				return this._PUNTAJE;
+			}
+			set
+			{
+				if ((this._PUNTAJE != value))
+				{
+					this._PUNTAJE = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FECHA_HORA", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FECHA_HORA
+		{
+			get
+			{
+				return this._FECHA_HORA;
+			}
+			set
+			{
+				if ((this._FECHA_HORA != value))
+				{
+					this._FECHA_HORA = value;
 				}
 			}
 		}
@@ -1417,99 +1452,63 @@ namespace AccesoDatos
 		}
 	}
 	
-	public partial class SP_OBTENER_PUNTAJEResult
+	public partial class SP_OBTENER_RELACIONResult
 	{
 		
-		private int _ID_PUNTAJE;
+		private int _ID_PACIENTE;
 		
-		private int _ID_JUEGO;
+		private string _NOMBRE;
 		
-		private string _NOMBRE_JUEGO;
+		private System.DateTime _FECHA_NACIMIENTO;
 		
-		private int _PUNTAJE;
-		
-		private System.Nullable<System.DateTime> _FECHA_HORA;
-		
-		public SP_OBTENER_PUNTAJEResult()
+		public SP_OBTENER_RELACIONResult()
 		{
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID_PUNTAJE", DbType="Int NOT NULL")]
-		public int ID_PUNTAJE
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID_PACIENTE", DbType="Int NOT NULL")]
+		public int ID_PACIENTE
 		{
 			get
 			{
-				return this._ID_PUNTAJE;
+				return this._ID_PACIENTE;
 			}
 			set
 			{
-				if ((this._ID_PUNTAJE != value))
+				if ((this._ID_PACIENTE != value))
 				{
-					this._ID_PUNTAJE = value;
+					this._ID_PACIENTE = value;
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID_JUEGO", DbType="Int NOT NULL")]
-		public int ID_JUEGO
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NOMBRE", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string NOMBRE
 		{
 			get
 			{
-				return this._ID_JUEGO;
+				return this._NOMBRE;
 			}
 			set
 			{
-				if ((this._ID_JUEGO != value))
+				if ((this._NOMBRE != value))
 				{
-					this._ID_JUEGO = value;
+					this._NOMBRE = value;
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NOMBRE_JUEGO", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
-		public string NOMBRE_JUEGO
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FECHA_NACIMIENTO", DbType="Date NOT NULL")]
+		public System.DateTime FECHA_NACIMIENTO
 		{
 			get
 			{
-				return this._NOMBRE_JUEGO;
+				return this._FECHA_NACIMIENTO;
 			}
 			set
 			{
-				if ((this._NOMBRE_JUEGO != value))
+				if ((this._FECHA_NACIMIENTO != value))
 				{
-					this._NOMBRE_JUEGO = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PUNTAJE", DbType="Int NOT NULL")]
-		public int PUNTAJE
-		{
-			get
-			{
-				return this._PUNTAJE;
-			}
-			set
-			{
-				if ((this._PUNTAJE != value))
-				{
-					this._PUNTAJE = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FECHA_HORA", DbType="DateTime")]
-		public System.Nullable<System.DateTime> FECHA_HORA
-		{
-			get
-			{
-				return this._FECHA_HORA;
-			}
-			set
-			{
-				if ((this._FECHA_HORA != value))
-				{
-					this._FECHA_HORA = value;
+					this._FECHA_NACIMIENTO = value;
 				}
 			}
 		}
