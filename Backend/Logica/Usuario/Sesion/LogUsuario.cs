@@ -346,8 +346,8 @@ namespace Backend.Logica
                         res.resultado = false;
                         res.listaDeErrores.Add(new Error
                         {
-                            idError = (int)(errorId ?? -1),
-                            error = !string.IsNullOrEmpty(errorCode) ? errorCode : "Error desconocido"
+                            idError = (int)errorId,
+                            error = errorCode
                         });
                     }
                 }

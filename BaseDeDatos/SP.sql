@@ -556,6 +556,7 @@ GO
 CREATE OR ALTER PROCEDURE SP_INSERTAR_RELACION
     @ID_USUARIO_CUIDADOR INT,
     @CODIGO_PACIENTE VARCHAR(6),
+    @ID_RETURN INT OUTPUT,
     @ERROR_ID INT OUTPUT,
     @ERROR_CODE NVARCHAR(255) OUTPUT,
     @ERROR_DESCRIPTION NVARCHAR(MAX) OUTPUT
@@ -578,6 +579,7 @@ BEGIN
             FROM ERROR_CATALOG 
             WHERE NUM_ERROR = 50009;
 
+            SET @ID_RETURN = -1;
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -594,6 +596,7 @@ BEGIN
             FROM ERROR_CATALOG 
             WHERE NUM_ERROR = 50004;
 
+            SET @ID_RETURN = -1;
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -612,6 +615,7 @@ BEGIN
             FROM ERROR_CATALOG 
             WHERE NUM_ERROR = 50011;
 
+            SET @ID_RETURN = -1;
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -627,6 +631,8 @@ BEGIN
             GETDATE()
         );
 
+        SET @ID_RETURN = SCOPE_IDENTITY(); -- ✅ Ahora se puede devolver
+
         COMMIT TRANSACTION;
 
         SET @ERROR_ID = NULL;
@@ -635,12 +641,14 @@ BEGIN
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
+        SET @ID_RETURN = -1;
         SET @ERROR_ID = ERROR_NUMBER();
         SET @ERROR_CODE = 'ERROR_SQL';
         SET @ERROR_DESCRIPTION = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 
 -- SP:010: OBTENER RELACION (CUIDADOR PACIENTE)
