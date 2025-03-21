@@ -37,6 +37,12 @@ namespace Backend.Entidades
         direccionVacia = 25,
         contrasenaActualVacia = 26,
         nuevaContrasenaVacia = 27,
-        codigoPacienteInvalido = 28,    
+        codigoPacienteInvalido = 28,
+        pingVacio = 29,
+        pingInsuficiente = 30,  
+        pingSoloNumeros = 31,   
+        pingActualOblicatorio  = 32,
+        nuevoPingVacio = 33,
+
     }
 }

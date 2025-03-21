@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Entidades
 {
-   public class ResObtenerRelacion : ResBase
+   public class ResActualizarPing : ResBase
     {
-        public List<Usuario> listaUsuarios { get; set; } 
-
-
     }
 }

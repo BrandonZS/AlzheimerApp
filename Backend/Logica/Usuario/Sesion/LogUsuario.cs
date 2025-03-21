@@ -359,9 +359,7 @@ namespace Backend.Logica
 
             return res;
         }
-
-
-        //Revisar
+        //Funciona
         public ResObtenerRelacion obtenerRelacion(ReqObtenerRelacion req)
         {
             ResObtenerRelacion res = new ResObtenerRelacion();
@@ -410,9 +408,7 @@ namespace Backend.Logica
 
             return res;
         }
-
-
-
+        //Funciona
         public ResEliminarRelacion eliminarRelacion(ReqEliminarRelacion req)
         {
             ResEliminarRelacion res = new ResEliminarRelacion();
@@ -460,6 +456,158 @@ namespace Backend.Logica
 
             return res;
         }
+        //Funciona
+        public ResInsertarPing insertarPing(ReqInsertarPing req)
+        {
+            ResInsertarPing res = new ResInsertarPing();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validación básica
+                res.listaDeErrores = Validaciones.validarInsertarPing(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_INSERTAR_PING( req.IdUsuario, req.Codigo,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (idReturn != null && idReturn > 0)
+                    {
+                        res.resultado = true;
+
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+        //Funciona
+        public ResActualizarPing actualizarPing(ReqActualizarPing req)
+        {
+            ResActualizarPing res = new ResActualizarPing();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validación
+                res.listaDeErrores = Validaciones.validarActualizarPing(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_ACTUALIZAR_PING(req.IdUsuario,req.PinActual,req.NuevoCodigo,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (idReturn != null && idReturn > 0)
+                    {
+                        res.resultado = true;
+
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+        //Funciona
+        public ResEliminarPing eliminarPing(ReqEliminarPing req)
+        {
+            ResEliminarPing res = new ResEliminarPing();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validación
+                res.listaDeErrores = Validaciones.validarEliminarPing(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_ELIMINAR_PING(req.IdUsuario,req.Codigo,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (errorId == null || errorId == 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
 
 
 

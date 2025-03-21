@@ -64,7 +64,10 @@
     <Compile Include="Entidades\Request\ReqSesion\ReqConsultarSesion.cs" />
     <Compile Include="Entidades\Request\ReqSesion\ReqIniciarSesion.cs" />
     <Compile Include="Entidades\Request\ReqUsuario\ReqActualizarContrasena.cs" />
+    <Compile Include="Entidades\Request\ReqUsuario\ReqActualizarPing.cs" />
     <Compile Include="Entidades\Request\ReqUsuario\ReqActualizarUsuario.cs" />
+    <Compile Include="Entidades\Request\ReqUsuario\ReqEliminarPing.cs" />
+    <Compile Include="Entidades\Request\ReqUsuario\ReqInsertarPing.cs" />
     <Compile Include="Entidades\Request\ReqUsuario\ReqInsertarUsuario.cs" />
     <Compile Include="Entidades\Response\ResBase.cs" />
     <Compile Include="Entidades\Response\ResJuego\ResInsertarJuego.cs" />
@@ -75,7 +78,10 @@
     <Compile Include="Entidades\Response\ResSesion\ResConsultarSesion.cs" />
     <Compile Include="Entidades\Response\ResSesion\ResIniciarSesion.cs" />
     <Compile Include="Entidades\Response\ResUsuario\ResActualizarContrasena.cs" />
+    <Compile Include="Entidades\Response\ResUsuario\ResActualizarPing.cs" />
     <Compile Include="Entidades\Response\ResUsuario\ResActualizarUsuario.cs" />
+    <Compile Include="Entidades\Response\ResUsuario\ResEliminarPing.cs" />
+    <Compile Include="Entidades\Response\ResUsuario\ResInsertarPing.cs" />
     <Compile Include="Entidades\Response\ResUsuario\ResInsertarUsuario.cs" />
     <Compile Include="Logica\Juego\LogJuego.cs" />
     <Compile Include="Logica\Juego\ValidarJuego.cs" />

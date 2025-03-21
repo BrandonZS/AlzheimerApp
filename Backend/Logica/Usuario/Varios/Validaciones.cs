@@ -305,6 +305,133 @@ namespace Backend.Logica.Usuario.Varios
             return errores;
         }
 
+        public static List<Error> validarInsertarPing(ReqInsertarPing req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Codigo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingVacio,
+                        error = "Ping es obligatorio"
+                    });
+                }
+                else if (req.Codigo.Length != 6)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingInsuficiente,
+                        error = "El Ping debe tener exactamente 6 dígitos"
+                    });
+                }
+                else if (!Regex.IsMatch(req.Codigo, @"^\d{6}$"))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingSoloNumeros,
+                        error = "El Ping debe contener solo números"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarActualizarPing(ReqActualizarPing req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.PinActual))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingActualOblicatorio,
+                        error = "PIN actual es obligatorio"
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(req.NuevoCodigo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.nuevoPingVacio,
+                        error = "Nuevo PIN es obligatorio"
+                    });
+                }
+                else if (req.NuevoCodigo.Length != 6 || !Regex.IsMatch(req.NuevoCodigo, @"^\d{6}$"))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingSoloNumeros,
+                        error = "El nuevo PIN debe ser numérico de 6 dígitos"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarEliminarPing(ReqEliminarPing req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Codigo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingActualOblicatorio,
+                        error = "PIN es obligatorio"
+                    });
+                }
+                else if (req.Codigo.Length != 6 || !Regex.IsMatch(req.Codigo, @"^\d{6}$"))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingSoloNumeros,
+                        error = "El PIN debe ser numérico de 6 dígitos"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+
+
+
+
+
 
 
 
