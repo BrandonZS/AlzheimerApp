@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Logica.Usuario.Varios
 {
-   public static class Validaciones
+    public static class Validaciones
     {
         public static List<Error> validarUsuario(ReqInsertarUsuario req)
         {
@@ -132,8 +132,8 @@ namespace Backend.Logica.Usuario.Varios
                     errores.Add(error);
                 }
 
-            
-                
+
+
             }
             return errores;
         }

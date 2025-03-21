@@ -11,7 +11,7 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace Backend.Logica
 {
-   public class LogUsuario
+    public class LogUsuario
     {
         public ResInsertarUsuario insertarUsuario(ReqInsertarUsuario req)
         {
@@ -136,7 +136,7 @@ namespace Backend.Logica
                             res.usuario = this.factoryUsurario(resultado);
                         }
                     }
-                    if (errorId == null || errorId == 0) 
+                    if (errorId == null || errorId == 0)
                     {
                         res.resultado = true;
                     }
@@ -182,7 +182,7 @@ namespace Backend.Logica
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
                         // Ejecutar el Stored Procedure SP_CERRAR_SESION
-                        var resultado = linq.SP_CERRAR_SESION( req.IdUsuario, req.Origen, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
+                        var resultado = linq.SP_CERRAR_SESION(req.IdUsuario, req.Origen, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
                     }
 
                     // ✅ Manejo seguro de `idReturn` y `errorId`
@@ -221,7 +221,7 @@ namespace Backend.Logica
             {
                 res.listaDeErrores = Validaciones.validarActualizarUsuario(req);
 
-                if (!res.listaDeErrores.Any()) 
+                if (!res.listaDeErrores.Any())
                 {
                     //CERO errores ¡Todo bien!
                     int? idReturn = 0;
@@ -231,7 +231,7 @@ namespace Backend.Logica
 
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        var resultado = linq.SP_ACTUALIZAR_USUARIO( req.IdUsuario,req.Nombre,req.FechaNacimiento,req.Direccion, req.Pin,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                        var resultado = linq.SP_ACTUALIZAR_USUARIO(req.IdUsuario, req.Nombre, req.FechaNacimiento, req.Direccion, req.Pin, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
                     }
 
                     // ✅ Manejo seguro de `idReturn` y `errorId`
@@ -280,7 +280,7 @@ namespace Backend.Logica
 
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        linq.SP_ACTUALIZAR_CONTRASENA( req.IdUsuario,req.ContrasenaActual,req.NuevaContrasena,req.Pin,ref errorId,ref errorCode,ref errorDescrip);
+                        linq.SP_ACTUALIZAR_CONTRASENA(req.IdUsuario, req.ContrasenaActual, req.NuevaContrasena, req.Pin, ref errorId, ref errorCode, ref errorDescrip);
                     }
 
                     if (errorId == null || errorId == 0)
@@ -330,7 +330,7 @@ namespace Backend.Logica
 
                     using (MiLinqDataContext linq = new MiLinqDataContext())
                     {
-                        linq.SP_INSERTAR_RELACION( req.IdUsuarioCuidador,req.CodigoPaciente,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                        linq.SP_INSERTAR_RELACION(req.IdUsuarioCuidador, req.CodigoPaciente, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
                     }
 
                     if (idReturn.HasValue && idReturn > 0)  // ✅ Usa .HasValue para evitar null
@@ -431,10 +431,10 @@ namespace Backend.Logica
             Backend.Entidades.Usuario usuario = new Backend.Entidades.Usuario();
             usuario.IdUsuario = (int)tc.ID_USUARIO;
             usuario.Nombre = tc.NOMBRE;
-            usuario.CorreoElectronico = tc.CORREO_ELECTRONICO;   
+            usuario.CorreoElectronico = tc.CORREO_ELECTRONICO;
             usuario.FechaNacimiento = tc.FECHA_NACIMIENTO;
             usuario.FotoPerfil = tc.FOTO_PERFIL?.ToArray();
-            usuario.Codigo = tc.CODIGO;  
+            usuario.Codigo = tc.CODIGO;
             usuario.Direccion = tc.DIRECCION;
             usuario.IdTipoUsuario = tc.ID_TIPO_USUARIO;
 
