@@ -642,6 +642,55 @@ namespace Backend.Logica.Usuario.Varios
             return errores;
         }
 
+        public static List<Error> validarEliminarPacienteEvento(ReqEliminarPacienteEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarObtenerEventosPaciente(ReqObtenerEventosPaciente req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+        public static List<Error> validarObtenerEventosCuidador(ReqObtenerEventosCuidador req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+
+
 
 
 

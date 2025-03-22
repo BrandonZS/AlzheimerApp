@@ -95,51 +95,6 @@ namespace API.Controllers
         }
 
 
-        //Api para mensajes 
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/mensaje/insertar")]
-        public ResInsertarMensaje insertarMensaje(ReqInsertarMensaje req)
-        {
-            return new LogUsuario().insertarMensaje(req);
-        }
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/mensaje/obtener")]
-        public ResObtenerMensajes obtenerMensajes(ReqObtenerMensajes req)
-        {
-            return new LogUsuario().obtenerMensajes(req);
-        }
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/mensaje/actualizarestado")]
-        public ResActualizarMensaje actualizarEstadoMensaje(ReqActualizarMensaje req)
-        {
-            return new LogUsuario().actualizarEstadoMensaje(req);
-        }
-
-        //Api para Evento
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/evento/insertar")]
-        public ResInsertarEvento insertarEvento(ReqInsertarEvento req)
-        {
-            return new LogUsuario().insertarEvento(req);
-        }
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/evento/actualizar")]
-        public ResActualizarEvento actualizarEvento(ReqActualizarEvento req)
-        {
-            return new LogUsuario().actualizarEvento(req);
-        }
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/evento/eliminar")]
-        public ResEliminarEvento eliminarEvento(ReqEliminarEvento req)
-        {
-            return new LogUsuario().eliminarEvento(req);
-        }
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("api/evento/agregarPaciente")]
-        public ResInsertarPacienteEvento insertarPacienteEvento(ReqInsertarPacienteEvento req)
-        {
-            return new LogUsuario().insertarPacienteEvento(req);
-        }
 
 
 
