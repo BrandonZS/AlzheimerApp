@@ -929,7 +929,6 @@ namespace Backend.Logica
                     {
                         linq.SP_INSERTAR_PACIENTE_EVENTO(req.IdEvento, req.IdCuidador, req.IdPaciente, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
                     }
-
                     if (idReturn.HasValue && idReturn > 0)
                     {
                         res.resultado = true;
