@@ -1007,7 +1007,7 @@ BEGIN
         INSERT INTO EVENTO_USUARIO (ID_EVENTO, ID_USUARIO, ID_ESTADO)
         VALUES (@ID_EVENTO, @ID_PACIENTE, 1);
 
-        SET @ID_RETURN = 1; -- ✅ Confirmación de éxito sin usar SCOPE_IDENTITY()
+        SET @ID_RETURN = 1; 
         COMMIT TRANSACTION;
 
         SET @ERROR_ID = NULL;
