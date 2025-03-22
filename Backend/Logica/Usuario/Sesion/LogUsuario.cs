@@ -612,6 +612,366 @@ namespace Backend.Logica
 
 
 
+        //Metodos para Mensaje
+        public ResInsertarMensaje insertarMensaje(ReqInsertarMensaje req)
+        {
+            ResInsertarMensaje res = new ResInsertarMensaje();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar datos del request
+                res.listaDeErrores = Validaciones.validarInsertarMensaje(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_INSERTAR_MENSAJE(req.IdCuidador,req.IdPaciente,req.Contenido,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (idReturn > 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
+        public ResObtenerMensajes obtenerMensajes(ReqObtenerMensajes req)
+        {
+            ResObtenerMensajes res = new ResObtenerMensajes();
+            res.listaDeErrores = new List<Error>();
+            res.listaMensajes = new List<Mensaje>();
+
+            try
+            {
+                res.listaDeErrores = Validaciones.validarObtenerMensajes(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        var resultado = linq.SP_OBTENER_MENSAJES(req.IdPaciente, ref errorId, ref errorCode, ref errorDescrip).ToList();
+
+                        if (resultado != null && resultado.Any())
+                        {
+                            res.listaMensajes = factoryListaMensajes(resultado, req.IdPaciente);
+                        }
+                    }
+
+                    res.resultado = errorId == null || errorId == 0;
+                    if (!res.resultado)
+                    {
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
+        public ResActualizarMensaje actualizarEstadoMensaje(ReqActualizarMensaje req)
+        {
+            ResActualizarMensaje res = new ResActualizarMensaje();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de entrada
+                res.listaDeErrores = Validaciones.validarActualizarMensaje(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_ACTUALIZAR_ESTADO_MENSAJES(req.IdPaciente,req.IdMensaje,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (errorId == null || errorId == 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
+        //Metodos Evento
+        public ResInsertarEvento insertarEvento(ReqInsertarEvento req)
+        {
+            ResInsertarEvento res = new ResInsertarEvento();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar la solicitud
+                res.listaDeErrores = Validaciones.validarInsertarEvento(req);
+
+                if (!res.listaDeErrores.Any()) // Si no hay errores, ejecutar el SP
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_INSERTAR_EVENTO(req.IdCuidador,req.Titulo,req.Descripcion,req.FechaHora,req.IdPrioridad,ref idReturn,ref errorId,ref errorCode,ref errorDescrip);
+                    }
+
+                    if (idReturn != null && idReturn > 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+        public ResActualizarEvento actualizarEvento(ReqActualizarEvento req)
+        {
+            ResActualizarEvento res = new ResActualizarEvento();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validar los datos de la solicitud
+                res.listaDeErrores = Validaciones.validarActualizarEvento(req);
+
+                if (!res.listaDeErrores.Any())
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_ACTUALIZAR_EVENTO(req.IdEvento, req.IdCuidador, req.Titulo, req.Descripcion, req.FechaHora, req.IdPrioridad, ref errorId, ref errorCode, ref errorDescrip);
+                    }
+
+                    if (errorId == null || errorId == 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else // Manejar errores del SP
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+        public ResEliminarEvento eliminarEvento(ReqEliminarEvento req)
+        {
+            ResEliminarEvento res = new ResEliminarEvento();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validaciones
+                res.listaDeErrores = Validaciones.validarEliminarEvento(req);
+
+                if (!res.listaDeErrores.Any()) // Si no hay errores, proceder con la eliminación
+                {
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_ELIMINAR_EVENTO(req.IdEvento, req.IdCuidador, ref errorId, ref errorCode, ref errorDescrip);
+                    }
+
+                    if (errorId == null || errorId == 0) // Si no hay errores, eliminación exitosa
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+        public ResInsertarPacienteEvento insertarPacienteEvento(ReqInsertarPacienteEvento req)
+        {
+            ResInsertarPacienteEvento res = new ResInsertarPacienteEvento();
+            res.listaDeErrores = new List<Error>();
+
+            try
+            {
+                // Validaciones
+                res.listaDeErrores = Validaciones.validarInsertarPacienteEvento(req);
+
+                if (!res.listaDeErrores.Any()) 
+                {
+                    int? idReturn = 0;
+                    int? errorId = 0;
+                    string errorCode = "";
+                    string errorDescrip = "";
+
+                    using (MiLinqDataContext linq = new MiLinqDataContext())
+                    {
+                        linq.SP_INSERTAR_PACIENTE_EVENTO(req.IdEvento, req.IdCuidador, req.IdPaciente, ref idReturn, ref errorId, ref errorCode, ref errorDescrip);
+                    }
+
+                    if (idReturn.HasValue && idReturn > 0)
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.listaDeErrores.Add(new Error
+                        {
+                            idError = (int)errorId,
+                            error = errorCode
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.resultado = false;
+                res.listaDeErrores.Add(new Error
+                {
+                    idError = -1,
+                    error = ex.Message
+                });
+            }
+
+            return res;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         private Sesion factorySesion(SP_INSERTAR_SESIONResult tc)
@@ -662,6 +1022,26 @@ namespace Backend.Logica
             };
         }
 
+        private List<Mensaje> factoryListaMensajes(List<SP_OBTENER_MENSAJESResult> resultado, int idPaciente)
+        {
+            List<Mensaje> mensajes = new List<Mensaje>();
+
+            foreach (var m in resultado)
+            {
+                mensajes.Add(new Mensaje
+                {
+                    IdMensaje = m.ID_MENSAJE,
+                    Contenido = m.CONTENIDO,
+                    FechaEnviado = (DateTime)m.FECHA_ENVIADO,
+                    FechaRecibido = null, // No viene del SP
+                    IdUsuarioCuidador = m.ID_CUIDADOR,
+                    IdUsuarioPaciente = idPaciente,
+                    IdEstado = m.ID_ESTADO
+                });
+            }
+
+            return mensajes;
+        }
 
     }
 

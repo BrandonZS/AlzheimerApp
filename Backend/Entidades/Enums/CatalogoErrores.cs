@@ -43,6 +43,15 @@ namespace Backend.Entidades
         pingSoloNumeros = 31,   
         pingActualOblicatorio  = 32,
         nuevoPingVacio = 33,
+        mensajeVacio = 34,
+        tituloVacio = 35,
+        prioridadInvalida = 36,
+        idEventoInvalido = 37,
+        idCuidadorInvalido = 38,
+        idPacienteInvalido = 39,
+
+
+
 
     }
 }

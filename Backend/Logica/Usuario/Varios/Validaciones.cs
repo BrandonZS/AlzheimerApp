@@ -305,6 +305,8 @@ namespace Backend.Logica.Usuario.Varios
             return errores;
         }
 
+        //Validaciones para Ping
+
         public static List<Error> validarInsertarPing(ReqInsertarPing req)
         {
             List<Error> errores = new List<Error>();
@@ -426,6 +428,228 @@ namespace Backend.Logica.Usuario.Varios
 
             return errores;
         }
+
+        //Validaciones para Mensaje
+
+        public static List<Error> validarInsertarMensaje(ReqInsertarMensaje req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Contenido))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.mensajeVacio,
+                        error = "El mensaje no puede estar vacío"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarObtenerMensajes(ReqObtenerMensajes req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarActualizarMensaje(ReqActualizarMensaje req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        //Validacione Para Evento
+        public static List<Error> validarInsertarEvento(ReqInsertarEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Titulo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.tituloVacio,
+                        error = "El título del evento es obligatorio"
+                    });
+                }
+
+                if (req.FechaHora == default(DateTime))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.fechaVacia,
+                        error = "La fecha del evento es obligatoria"
+                    });
+                }
+
+                if (req.IdPrioridad <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.prioridadInvalida,
+                        error = "La prioridad debe ser válida"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarActualizarEvento(ReqActualizarEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Titulo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.tituloVacio,
+                        error = "El título del evento es obligatorio"
+                    });
+                }
+
+                if (req.FechaHora < DateTime.Now)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.fechaInvalida,
+                        error = "La fecha del evento debe ser futura"
+                    });
+                }
+
+                if (req.IdPrioridad <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.prioridadInvalida,
+                        error = "ID de prioridad inválido"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarEliminarEvento(ReqEliminarEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarInsertarPacienteEvento(ReqInsertarPacienteEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (req.IdEvento <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.idEventoInvalido,
+                        error = "ID del evento inválido"
+                    });
+                }
+
+                if (req.IdCuidador <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.idCuidadorInvalido,
+                        error = "ID del cuidador inválido"
+                    });
+                }
+
+                if (req.IdPaciente <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.idPacienteInvalido,
+                        error = "ID del paciente inválido"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+
+
+
+
+
+
+
+
 
 
 
