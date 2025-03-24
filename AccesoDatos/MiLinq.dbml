@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="APP_ROBERTO" Class="MiLinqDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=HP;Initial Catalog=APP_ROBERTO;Integrated Security=True;Trust Server Certificate=True" SettingsObjectName="AccesoDatos.Properties.Settings" SettingsPropertyName="APP_ROBERTOConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=(localdb)\BrandonDB;Initial Catalog=APP_ROBERTO;Integrated Security=True" SettingsObjectName="AccesoDatos.Properties.Settings" SettingsPropertyName="APP_ROBERTOConnectionString1" Provider="System.Data.SqlClient" />
   <Function Name="dbo.SP_ACTUALIZAR_CONTRASENA" Method="SP_ACTUALIZAR_CONTRASENA">
     <Parameter Name="ID_USUARIO" Parameter="iD_USUARIO" Type="System.Int32" DbType="Int" />
     <Parameter Name="CONTRASENA_ACTUAL" Parameter="cONTRASENA_ACTUAL" Type="System.String" DbType="VarChar(255)" />
@@ -222,10 +222,8 @@
     <Parameter Name="TITULO" Parameter="tITULO" Type="System.String" DbType="VarChar(255)" />
     <Parameter Name="DESCRIPCION" Parameter="dESCRIPCION" Type="System.String" DbType="VarChar(MAX)" />
     <Parameter Name="BINARIO_FOTO" Parameter="bINARIO_FOTO" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" />
-    <Parameter Name="TITULO_IMAGEN" Parameter="tITULO_IMAGEN" Type="System.String" DbType="VarChar(255)" />
     <Parameter Name="ID_USUARIO" Parameter="iD_USUARIO" Type="System.Int32" DbType="Int" />
     <Parameter Name="ID_RETURN" Parameter="iD_RETURN" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Parameter Name="ID_RETURN_2" Parameter="iD_RETURN_2" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_ID" Parameter="eRROR_ID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="ERROR_CODE" Parameter="eRROR_CODE" Type="System.String" DbType="NVarChar(255)" Direction="InOut" />
     <Parameter Name="ERROR_DESCRIPTION" Parameter="eRROR_DESCRIPTION" Type="System.String" DbType="NVarChar(MAX)" Direction="InOut" />

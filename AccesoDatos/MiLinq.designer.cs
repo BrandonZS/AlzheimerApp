@@ -33,7 +33,7 @@ namespace AccesoDatos
     #endregion
 		
 		public MiLinqDataContext() : 
-				base(global::AccesoDatos.Properties.Settings.Default.APP_ROBERTOConnectionString, mappingSource)
+				base(global::AccesoDatos.Properties.Settings.Default.APP_ROBERTOConnectionString1, mappingSource)
 		{
 			OnCreated();
 		}
@@ -293,14 +293,13 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_PREGUNTA")]
-		public int SP_INSERTAR_PREGUNTA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(MAX)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BINARIO_FOTO", DbType="VarBinary(MAX)")] System.Data.Linq.Binary bINARIO_FOTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO_IMAGEN", DbType="VarChar(255)")] string tITULO_IMAGEN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN_2", DbType="Int")] ref System.Nullable<int> iD_RETURN_2, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_INSERTAR_PREGUNTA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(MAX)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BINARIO_FOTO", DbType="VarBinary(MAX)")] System.Data.Linq.Binary bINARIO_FOTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, tITULO, dESCRIPCION, bINARIO_FOTO, tITULO_IMAGEN, iD_USUARIO, iD_RETURN, iD_RETURN_2, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
-			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(6)));
-			iD_RETURN_2 = ((System.Nullable<int>)(result.GetParameterValue(7)));
-			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(8)));
-			eRROR_CODE = ((string)(result.GetParameterValue(9)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(10)));
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, tITULO, dESCRIPCION, bINARIO_FOTO, iD_USUARIO, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(5)));
+			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(6)));
+			eRROR_CODE = ((string)(result.GetParameterValue(7)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(8)));
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -558,7 +557,7 @@ namespace AccesoDatos
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)", CanBeNull=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)")]
 		public System.Data.Linq.Binary FOTO_PERFIL
 		{
 			get
@@ -714,7 +713,7 @@ namespace AccesoDatos
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)", CanBeNull=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOTO_PERFIL", DbType="VarBinary(MAX)")]
 		public System.Data.Linq.Binary FOTO_PERFIL
 		{
 			get
