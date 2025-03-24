@@ -10,6 +10,11 @@ namespace Backend.Entidades.Enums
     {
        nombreJuegoNuloVacio = 1,
        usuarioInvalido = 2,
+       descripcionNuloVacia = 3,
+       opcionNula = 4,
+       yaExisteOpcionCorrecta = 5,
+       juegoNoValido = 6,
+       noIngresoOpcionCorrecta = 7,
 
 
     }
