@@ -52,12 +52,53 @@ namespace API.Controllers
         {
             return new LogUsuario().actualizarContrasena(req);
         }
+
+        //Api para relacion 
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route("api/usuario/insertarrelacion")]
         public ResInsertarRelacion insertarRelacion(ReqInsertarRelacion req)
         {
             return new LogUsuario().insertarRelacion(req);
         }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/eliminarrelacion")]
+        public ResEliminarRelacion eliminarRelacion(ReqEliminarRelacion req)
+        {
+            return new LogUsuario().eliminarRelacion(req);
+        }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/obtenerrelacion")]
+        public ResObtenerRelacion obtenerRelacion(ReqObtenerRelacion req)
+        {
+            return new LogUsuario().obtenerRelacion(req);
+
+            //Api para Ping
+        }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/insertarping")]
+        public ResInsertarPing insertarPing(ReqInsertarPing req)
+        {
+            return new LogUsuario().insertarPing(req);
+        }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/actualizarping")]
+        public ResActualizarPing actualizarPing(ReqActualizarPing req)
+        {
+            return new LogUsuario().actualizarPing(req);
+        }
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/usuario/eliminarping")]
+        public ResEliminarPing eliminarPing(ReqEliminarPing req)
+        {
+            return new LogUsuario().eliminarPing(req);
+        }
+
+
+
+
+
+
 
 
 

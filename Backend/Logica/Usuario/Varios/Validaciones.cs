@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Logica.Usuario.Varios
 {
-   public static class Validaciones
+    public static class Validaciones
     {
         public static List<Error> validarUsuario(ReqInsertarUsuario req)
         {
@@ -132,8 +132,8 @@ namespace Backend.Logica.Usuario.Varios
                     errores.Add(error);
                 }
 
-            
-                
+
+
             }
             return errores;
         }
@@ -273,152 +273,442 @@ namespace Backend.Logica.Usuario.Varios
             return errores;
         }
 
+        public static List<Error> validarObtenerRelacion(ReqObtenerRelacion req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarEliminarRelacion(ReqEliminarRelacion req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        //Validaciones para Ping
+
+        public static List<Error> validarInsertarPing(ReqInsertarPing req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Codigo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingVacio,
+                        error = "Ping es obligatorio"
+                    });
+                }
+                else if (req.Codigo.Length != 6)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingInsuficiente,
+                        error = "El Ping debe tener exactamente 6 dígitos"
+                    });
+                }
+                else if (!Regex.IsMatch(req.Codigo, @"^\d{6}$"))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingSoloNumeros,
+                        error = "El Ping debe contener solo números"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarActualizarPing(ReqActualizarPing req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.PinActual))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingActualOblicatorio,
+                        error = "PIN actual es obligatorio"
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(req.NuevoCodigo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.nuevoPingVacio,
+                        error = "Nuevo PIN es obligatorio"
+                    });
+                }
+                else if (req.NuevoCodigo.Length != 6 || !Regex.IsMatch(req.NuevoCodigo, @"^\d{6}$"))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingSoloNumeros,
+                        error = "El nuevo PIN debe ser numérico de 6 dígitos"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarEliminarPing(ReqEliminarPing req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Codigo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingActualOblicatorio,
+                        error = "PIN es obligatorio"
+                    });
+                }
+                else if (req.Codigo.Length != 6 || !Regex.IsMatch(req.Codigo, @"^\d{6}$"))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.pingSoloNumeros,
+                        error = "El PIN debe ser numérico de 6 dígitos"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        //Validaciones para Mensaje
+
+        public static List<Error> validarInsertarMensaje(ReqInsertarMensaje req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Contenido))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.mensajeVacio,
+                        error = "El mensaje no puede estar vacío"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarObtenerMensajes(ReqObtenerMensajes req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarActualizarMensaje(ReqActualizarMensaje req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        //Validacione Para Evento
+        public static List<Error> validarInsertarEvento(ReqInsertarEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Titulo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.tituloVacio,
+                        error = "El título del evento es obligatorio"
+                    });
+                }
+
+                if (req.FechaHora == default(DateTime))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.fechaVacia,
+                        error = "La fecha del evento es obligatoria"
+                    });
+                }
+
+                if (req.IdPrioridad <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.prioridadInvalida,
+                        error = "La prioridad debe ser válida"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarActualizarEvento(ReqActualizarEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(req.Titulo))
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.tituloVacio,
+                        error = "El título del evento es obligatorio"
+                    });
+                }
+
+                if (req.FechaHora < DateTime.Now)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.fechaInvalida,
+                        error = "La fecha del evento debe ser futura"
+                    });
+                }
+
+                if (req.IdPrioridad <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.prioridadInvalida,
+                        error = "ID de prioridad inválido"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarEliminarEvento(ReqEliminarEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarInsertarPacienteEvento(ReqInsertarPacienteEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+            else
+            {
+                if (req.IdEvento <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.idEventoInvalido,
+                        error = "ID del evento inválido"
+                    });
+                }
+
+                if (req.IdCuidador <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.idCuidadorInvalido,
+                        error = "ID del cuidador inválido"
+                    });
+                }
+
+                if (req.IdPaciente <= 0)
+                {
+                    errores.Add(new Error
+                    {
+                        idError = (int)CatalogoErrores.idPacienteInvalido,
+                        error = "ID del paciente inválido"
+                    });
+                }
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarEliminarPacienteEvento(ReqEliminarPacienteEvento req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+
+        public static List<Error> validarObtenerEventosPaciente(ReqObtenerEventosPaciente req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
+        public static List<Error> validarObtenerEventosCuidador(ReqObtenerEventosCuidador req)
+        {
+            List<Error> errores = new List<Error>();
+
+            if (req == null)
+            {
+                errores.Add(new Error
+                {
+                    idError = (int)CatalogoErrores.requestNull,
+                    error = "Request null"
+                });
+            }
+
+            return errores;
+        }
 
 
 
 
 
-        //public static List<Error> validarEmpleado(ReqIngresarEmpleado req)
-        //{
-        //    List<Error> errores = new List<Error>();
 
-        //    if (req == null)
-        //    {
-        //        Error error = new Error();
-        //        error.idError = (int)CatalogoErrores.requestNull;
-        //        error.error = "Request null";
-        //        errores.Add(error);
-        //    }
-        //    else
-        //    {
-        //        if (String.IsNullOrEmpty(req.empleado.nombre))
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
-        //            error.error = "Falta el nombre del empleado";
-        //            errores.Add(error);
-        //        }
-        //        if (String.IsNullOrEmpty(req.empleado.apellido))
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.apellidoNuloVacio;
-        //            error.error = "Falta el apellido del empleado";
-        //            errores.Add(error);
-        //        }
-        //        if (String.IsNullOrEmpty(req.empleado.telefono))
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.telefonoNuloVacio;
-        //            error.error = "Falta el telefono del empleado";
-        //            errores.Add(error);
-        //        }
-        //        if (String.IsNullOrEmpty(req.empleado.espacialidad))
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.especialidadNuloVacio;
-        //            error.error = "Falta la especialidad del empleado";
-        //            errores.Add(error);
-        //        }
-        //    }
-        //    return errores;
-        //}
 
-        //public static List<Error> validarServicio(ReqIngresarServicio req)
-        //{
-        //    List<Error> errores = new List<Error>();
 
-        //    if (req == null)
-        //    {
-        //        Error error = new Error();
-        //        error.idError = (int)CatalogoErrores.requestNull;
-        //        error.error = "Request null";
-        //        errores.Add(error);
-        //    }
-        //    else
-        //    {
-        //        if (String.IsNullOrEmpty(req.servicio.nombre))
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
-        //            error.error = "Falta el nombre del servicio";
-        //            errores.Add(error);
-        //        }
 
-        //        if (String.IsNullOrEmpty(req.servicio.descripcion))
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.descripcionNuloVacio;
-        //            error.error = "Falta la descripcion del servicio";
-        //            errores.Add(error);
-        //        }
 
-        //        if (req.servicio.duracionMinutos < 0)
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.duracionServicioNuloVacio;
-        //            error.error = "La duracion tiene que ser mayor a 0 ";
-        //            errores.Add(error);
-        //        }
 
-        //        if (req.servicio.precio < 0)
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.precioNuloVacio;
-        //            error.error = "El precio debe ser mayor a 0";
-        //            errores.Add(error);
-        //        }
-        //    }
-        //    return errores;
-        //}
 
-        //public static List<Error> validarProducto(ReqIngresarProducto req)
-        //{
-        //    List<Error> errores = new List<Error>();
 
-        //    if (req == null)
-        //    {
-        //        Error error = new Error();
-        //        error.idError = (int)CatalogoErrores.requestNull;
-        //        error.error = "Request null";
-        //        errores.Add(error);
-        //    }
-        //    else
-        //    {
-        //        if (String.IsNullOrEmpty(req.producto.nombre))
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.nombreNuloVacio;
-        //            error.error = "Falta nombre del producto";
-        //            errores.Add(error);
-        //        }
 
-        //        if (String.IsNullOrEmpty(req.producto.descripcion))
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.descripcionNuloVacio;
-        //            error.error = "Falta descripcion del producto";
-        //            errores.Add(error);
-        //        }
 
-        //        if (req.producto.precio < 0)
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.precioNuloVacio;
-        //            error.error = "El producto tiene que valer mas de 0";
-        //            errores.Add(error);
-        //        }
 
-        //        if (req.producto.stock < 0)
-        //        {
-        //            Error error = new Error();
-        //            error.idError = (int)CatalogoErrores.stockNullVacio;
-        //            error.error = "El stock tiene que ser mayor a 0";
-        //            errores.Add(error);
-        //        }
 
-        //    }
-        //    return errores;
-        //}
+
+
+
+
 
 
         public static bool EsCorreoValido(string correo)
