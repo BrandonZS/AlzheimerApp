@@ -169,5 +169,20 @@ namespace Backend.Logica.Juego
 
             return errores;
         }
+
+        public static List<Error> validarJuego(int id)
+        {
+            List<Error> errores = new List<Error>();
+            Error error = new Error();
+
+            if (id < 1)
+            {
+                error.idError = (int)ErroresBrandon.juegoNoValido;
+                error.error = "Juego NO valido";
+                errores.Add(error);
+            }
+
+            return errores;
+        }
     }
 }

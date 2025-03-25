@@ -219,7 +219,6 @@
   </Function>
   <Function Name="dbo.SP_INSERTAR_PREGUNTA" Method="SP_INSERTAR_PREGUNTA">
     <Parameter Name="ID_JUEGO" Parameter="iD_JUEGO" Type="System.Int32" DbType="Int" />
-    <Parameter Name="TITULO" Parameter="tITULO" Type="System.String" DbType="VarChar(255)" />
     <Parameter Name="DESCRIPCION" Parameter="dESCRIPCION" Type="System.String" DbType="VarChar(MAX)" />
     <Parameter Name="BINARIO_FOTO" Parameter="bINARIO_FOTO" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" />
     <Parameter Name="ID_USUARIO" Parameter="iD_USUARIO" Type="System.Int32" DbType="Int" />

@@ -382,7 +382,7 @@ namespace Backend.Logica
                         if (errorId == null || errorId == 0)
                         {
                             res.resultado = true;
-                            res.listaUsuarios = resultado.Select(factoryUsuarioRelacion).ToList(); 
+                            res.listaUsuarios = resultado.Select(factoryUsuarioRelacion).ToList();
                         }
                         else
                         {

@@ -293,13 +293,13 @@ namespace AccesoDatos
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_PREGUNTA")]
-		public int SP_INSERTAR_PREGUNTA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TITULO", DbType="VarChar(255)")] string tITULO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(MAX)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BINARIO_FOTO", DbType="VarBinary(MAX)")] System.Data.Linq.Binary bINARIO_FOTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		public int SP_INSERTAR_PREGUNTA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DESCRIPCION", DbType="VarChar(MAX)")] string dESCRIPCION, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BINARIO_FOTO", DbType="VarBinary(MAX)")] System.Data.Linq.Binary bINARIO_FOTO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, tITULO, dESCRIPCION, bINARIO_FOTO, iD_USUARIO, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
-			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(5)));
-			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(6)));
-			eRROR_CODE = ((string)(result.GetParameterValue(7)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(8)));
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, dESCRIPCION, bINARIO_FOTO, iD_USUARIO, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(5)));
+			eRROR_CODE = ((string)(result.GetParameterValue(6)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(7)));
 			return ((int)(result.ReturnValue));
 		}
 		

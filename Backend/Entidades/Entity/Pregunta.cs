@@ -9,7 +9,6 @@ namespace Backend.Entidades.Entity
     public class Pregunta
     {
         public int IdPregunta { get; set; }
-        public string Titulo { get; set; }
         public string Descripcion { get; set; }
         public byte[] Imagen { get; set; }
         public List<Opcion> opciones { get; set; } = new List<Opcion>();
