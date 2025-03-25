@@ -62,16 +62,6 @@ namespace AccesoDatos
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_CONTRASENA")]
-		public int SP_ACTUALIZAR_CONTRASENA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CONTRASENA_ACTUAL", DbType="VarChar(255)")] string cONTRASENA_ACTUAL, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NUEVA_CONTRASENA", DbType="VarChar(255)")] string nUEVA_CONTRASENA, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PIN", DbType="VarChar(6)")] string pIN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_USUARIO, cONTRASENA_ACTUAL, nUEVA_CONTRASENA, pIN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
-			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			eRROR_CODE = ((string)(result.GetParameterValue(5)));
-			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(6)));
-			return ((int)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_RELACION")]
 		public ISingleResult<SP_OBTENER_RELACIONResult> SP_OBTENER_RELACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_CUIDADOR", DbType="Int")] System.Nullable<int> iD_CUIDADOR, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
 		{
@@ -80,6 +70,16 @@ namespace AccesoDatos
 			eRROR_CODE = ((string)(result.GetParameterValue(2)));
 			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_RELACIONResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_CONTRASENA")]
+		public int SP_ACTUALIZAR_CONTRASENA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_USUARIO", DbType="Int")] System.Nullable<int> iD_USUARIO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CONTRASENA_ACTUAL", DbType="VarChar(255)")] string cONTRASENA_ACTUAL, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NUEVA_CONTRASENA", DbType="VarChar(255)")] string nUEVA_CONTRASENA, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PIN", DbType="VarChar(6)")] string pIN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_USUARIO, cONTRASENA_ACTUAL, nUEVA_CONTRASENA, pIN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			eRROR_CODE = ((string)(result.GetParameterValue(5)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(6)));
+			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_MENSAJES")]
@@ -300,6 +300,17 @@ namespace AccesoDatos
 			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(5)));
 			eRROR_CODE = ((string)(result.GetParameterValue(6)));
 			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(7)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_INSERTAR_PUNTAJE")]
+		public int SP_INSERTAR_PUNTAJE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_JUEGO", DbType="Int")] System.Nullable<int> iD_JUEGO, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_PACIENTE", DbType="Int")] System.Nullable<int> iD_PACIENTE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PUNTAJE", DbType="Int")] System.Nullable<int> pUNTAJE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID_RETURN", DbType="Int")] ref System.Nullable<int> iD_RETURN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_ID", DbType="Int")] ref System.Nullable<int> eRROR_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_CODE", DbType="NVarChar(255)")] ref string eRROR_CODE, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERROR_DESCRIPTION", DbType="NVarChar(MAX)")] ref string eRROR_DESCRIPTION)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD_JUEGO, iD_PACIENTE, pUNTAJE, iD_RETURN, eRROR_ID, eRROR_CODE, eRROR_DESCRIPTION);
+			iD_RETURN = ((System.Nullable<int>)(result.GetParameterValue(3)));
+			eRROR_ID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			eRROR_CODE = ((string)(result.GetParameterValue(5)));
+			eRROR_DESCRIPTION = ((string)(result.GetParameterValue(6)));
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -1429,6 +1440,8 @@ namespace AccesoDatos
 		
 		private System.Nullable<System.DateTime> _FECHA_HORA;
 		
+		private int _ID_USUARIO;
+		
 		public SP_OBTENER_PUNTAJEResult()
 		{
 		}
@@ -1509,6 +1522,22 @@ namespace AccesoDatos
 				if ((this._FECHA_HORA != value))
 				{
 					this._FECHA_HORA = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID_USUARIO", DbType="Int NOT NULL")]
+		public int ID_USUARIO
+		{
+			get
+			{
+				return this._ID_USUARIO;
+			}
+			set
+			{
+				if ((this._ID_USUARIO != value))
+				{
+					this._ID_USUARIO = value;
 				}
 			}
 		}

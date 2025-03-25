@@ -52,5 +52,27 @@ namespace API.Controllers
         {
             return new LogJuego().obtenerPregunta(req);
         }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/juego/eliminarjuego")]
+        public ResEliminarJuego obtenerPreguntas(ReqEliminarJuego req) //INVESTIGAR: Recibir y retornar HTTP
+        {
+            return new LogJuego().eliminarJuego(req);
+        }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/juego/obtenerpuntaje")]
+        public ResObtenerPuntaje obtenerPuntaje(ReqObtenerPuntaje req) //INVESTIGAR: Recibir y retornar HTTP
+        {
+            return new LogJuego().obtenerPuntaje(req);
+        }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("api/juego/insertarpuntaje")]
+        public ResInsertarPuntaje insertarPuntaje(ReqInsertarPuntaje req) //INVESTIGAR: Recibir y retornar HTTP
+        {
+            return new LogJuego().insertarPuntaje(req);
+        }
+        
     }
 }
